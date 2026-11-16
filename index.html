@@ -1,0 +1,5645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>托辅家长学堂</title>
+<style>
+  :root{
+    --page-bg:#FFF8F0;--brand:#FF8C42;--brand2:#FFB347;
+    --txt-main:#3D2E20;--txt-sub:#A2937F;
+    --green:#22B573;--mint:#4ECDC4;--pink:#FF6B6B;
+    --shadow-orange:0 16px 56px rgba(255,140,66,.10);
+    --shadow-brand:0 20px 60px rgba(255,140,66,.16);
+    --ease:cubic-bezier(0.16,1,0.3,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--page-bg);color:var(--txt-main);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+  .top-bar{position:sticky;top:0;z-index:100;background:rgba(255,248,240,.92);backdrop-filter:blur(20px);padding:calc(env(safe-area-inset-top) + 12px) 20px 12px;border-bottom:1px solid rgba(255,140,66,.08)}
+  .top-row{display:flex;align-items:center;justify-content:space-between}
+  .top-title{font-size:17px;font-weight:700;color:var(--txt-main);display:flex;align-items:center;gap:8px}
+  .top-title .tt-emoji{font-size:20px}
+  .top-badge{font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(255,140,66,.1);color:#E8722A;font-weight:600}
+  .top-progress{margin-top:10px;height:3px;background:rgba(255,140,66,.12);border-radius:2px;overflow:hidden}
+  .top-progress-bar{height:100%;width:8%;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:2px;transition:width .5s var(--ease)}
+  .top-hint{font-size:11px;color:var(--txt-sub);margin-top:8px;text-align:center}
+
+  .app-screen{padding-bottom:140px}
+
+  .v-head{position:relative;overflow:hidden;background:linear-gradient(150deg,#FF8C42 0%,#FFB347 100%);padding:28px 22px 44px;border-radius:0 0 30px 30px;color:#fff}
+  .v-head::before{content:'';position:absolute;top:-70px;right:-50px;width:240px;height:240px;background:rgba(255,255,255,.07);border-radius:50%}
+  .v-head::after{content:'';position:absolute;bottom:-60px;left:-40px;width:160px;height:160px;background:rgba(255,255,255,.05);border-radius:50%}
+  .v-date{position:absolute;top:16px;right:22px;font-size:12px;opacity:.85}
+  .v-greet{font-size:13px;opacity:.85;position:relative}
+  .v-name{font-size:22px;font-weight:800;position:relative;margin-top:3px}
+
+  .p2-card{margin:-24px 16px 0;position:relative;z-index:2;background:#fff;border-radius:18px;box-shadow:var(--shadow-brand);padding:16px 18px 0}
+  .p2-chips{display:flex;gap:8px;margin-bottom:14px}
+  .p2-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;background:#FFF8F0;border:1.5px solid #F0E6DA;color:#8A7A6A}
+  .p2-chip.on{background:#FF8C42;border-color:#FF8C42;color:#fff;box-shadow:0 4px 12px rgba(255,140,66,.25)}
+  .p2-child{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .p2-avatar{width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:linear-gradient(135deg,#FF8C42,#FFB347);color:#fff;font-size:19px;font-weight:700;flex-shrink:0}
+  .p2-cinfo{flex:1;min-width:0}
+  .p2-cname{font-size:17px;font-weight:800;color:#3D2E20;display:block}
+  .p2-cgrade{font-size:12px;color:#A2937F;display:block;margin-top:1px}
+  .p2-badge{font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;background:#E8F8E8;color:#22B573;white-space:nowrap}
+  .p2-badge.off{background:#FFF3E8;color:#E8873A}
+  .p2-status{display:flex;gap:10px;margin-bottom:14px}
+  .p2-cell{flex:1;text-align:center;padding:12px 4px;border-radius:14px;background:#FBF7F1;border:2px solid transparent}
+  .p2-cell.on{background:#FFF3E8;border-color:#FF8C42}
+  .p2-cico{font-size:18px;display:block;margin-bottom:3px}
+  .p2-clbl{font-size:13px;font-weight:600;color:#8A7A6A}
+  .p2-cell.on .p2-clbl{color:#FF8C42}
+  .p2-btn{width:100%;height:52px;line-height:52px;text-align:center;border-radius:16px;background:linear-gradient(135deg,#FF8C42,#FFB347);color:#fff;font-size:17px;font-weight:800;box-shadow:0 8px 22px rgba(255,140,66,.30);display:flex;align-items:center;justify-content:center;gap:5px}
+  .p2-btn.done{background:linear-gradient(135deg,#4ECDC4,#45B7AA);box-shadow:0 8px 22px rgba(78,205,196,.28)}
+  .p2-mini{display:flex;border-top:1px solid #F7F2EC;margin-top:14px;padding:12px 0}
+  .p2-mstat{flex:1;text-align:center;position:relative}
+  .p2-mstat+.p2-mstat::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:1px;background:#F3EAE0}
+  .p2-mnum{display:block;font-size:16px;font-weight:800;color:#3D2E20}
+  .p2-mnum.pink{color:#FF6B6B}
+  .p2-mlbl{display:block;font-size:11px;color:#A2937F;margin-top:1px}
+
+  .v-sec{margin:22px 22px 12px;display:flex;align-items:baseline;justify-content:space-between}
+  .v-sec-t{font-size:16px;font-weight:800;color:#3D2E20}
+  .v-sec-s{font-size:12px;color:#FF8C42;font-weight:600}
+
+  .p2-banner-wrap{margin:14px 16px 0;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .banner-fallback{position:relative;width:100%;height:110px;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
+  .banner-fallback.grad-1{background:linear-gradient(135deg,#FF8C42,#FFB347)}
+  .bf-deco{position:absolute;border-radius:50%;background:rgba(255,255,255,.14)}
+  .bf-deco-1{width:90px;height:90px;top:-28px;right:-18px}
+  .bf-deco-2{width:56px;height:56px;bottom:-18px;left:-12px;background:rgba(255,255,255,.10)}
+  .bf-title{font-size:19px;font-weight:800;letter-spacing:1px;position:relative;z-index:1;text-shadow:0 1px 4px rgba(0,0,0,.12)}
+  .bf-sub{font-size:11px;letter-spacing:3px;opacity:.9;margin-top:6px;position:relative;z-index:1}
+
+  .p2-notice{display:flex;align-items:center;gap:10px;background:#fff;border-radius:15px;padding:14px 16px;margin:0 16px 10px;box-shadow:var(--shadow-orange)}
+  .p2-ntag{font-size:11px;padding:3px 10px;border-radius:7px;background:#FFF0E0;color:#FF8C42;flex-shrink:0;font-weight:700}
+  .p2-nbody{flex:1;min-width:0}
+  .p2-ntitle{font-size:14px;font-weight:700;color:#3D2E20;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .p2-ntext{font-size:12px;color:#A2937F;display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .p2-ndate{font-size:11px;color:#C9BCAC;flex-shrink:0}
+
+  .invite-banner{position:relative;display:flex;align-items:center;margin:14px 16px 0;padding:18px 20px;border-radius:18px;background:linear-gradient(120deg,#E8590C 0%,#FF8C42 55%,#FFA94D 100%);box-shadow:0 6px 16px rgba(232,89,12,.28);overflow:hidden}
+  .ib-glow{position:absolute;border-radius:50%;background:rgba(255,255,255,.18);pointer-events:none}
+  .ib-glow-1{width:110px;height:110px;top:-40px;right:65px;animation:ibPulse 2.6s ease-in-out infinite}
+  .ib-glow-2{width:70px;height:70px;bottom:-30px;left:20px;background:rgba(255,255,255,.12);animation:ibPulse 3.2s ease-in-out infinite .6s}
+  @keyframes ibPulse{0%,100%{opacity:.5}50%{opacity:1}}
+  .ib-left{flex:1;min-width:0;position:relative}
+  .ib-title-row{display:flex;align-items:center;gap:7px}
+  .ib-emoji{font-size:22px}
+  .ib-title{font-size:19px;font-weight:800;color:#fff;letter-spacing:1px}
+  .ib-sub{display:block;margin-top:6px;font-size:12px;color:rgba(255,255,255,.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ib-right{flex-shrink:0;margin-left:12px;position:relative}
+  .ib-btn{padding:11px 16px;border-radius:22px;background:#fff;color:#E8590C;font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.12);white-space:nowrap}
+
+  .p2-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 16px}
+  .p2-tile{background:#fff;border-radius:16px;padding:14px 4px 12px;text-align:center;box-shadow:var(--shadow-orange)}
+  .p2-tic{width:44px;height:44px;line-height:44px;text-align:center;border-radius:13px;font-size:22px;margin:0 auto 7px}
+  .p2-tile.orange .p2-tic{background:#FFF3E8}
+  .p2-tile.amber .p2-tic{background:#FFF9E6}
+  .p2-tile.mint .p2-tic{background:#E8F8F6}
+  .p2-tile text{font-size:12px;color:#5B5248;font-weight:600}
+
+  .p2-eval{background:#fff;border-radius:14px;padding:14px 16px;margin:0 16px 10px;border-left:4px solid #FF8C42;box-shadow:var(--shadow-orange)}
+  .p2-eval-head{display:flex;justify-content:space-between;margin-bottom:4px}
+  .p2-eval-author{font-size:13px;font-weight:700;color:#3D2E20}
+  .p2-eval-date{font-size:11px;color:#B9AC9E}
+  .p2-eval-body{font-size:14px;color:#5B5248;line-height:1.7}
+
+  .p2-note-bubble{background:#FFFDF6;border-radius:14px;padding:14px 16px;margin:0 16px;border-left:4px solid #FFD93D}
+  .p2-note-text{font-size:14px;color:#3D2E20;line-height:1.7}
+
+  .mod{position:relative;transition:all .35s var(--ease);cursor:pointer}
+  .mod.active{box-shadow:0 0 0 3px var(--brand),0 0 40px rgba(255,140,66,.5)!important;transform:scale(1.015);z-index:10}
+  .mod-hint{position:absolute;top:8px;right:8px;min-width:20px;height:20px;padding:0 5px;background:var(--brand);color:#fff;border-radius:100px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;z-index:15;pointer-events:none;box-shadow:0 2px 8px rgba(255,140,66,.4)}
+
+  .sheet-mask{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;opacity:0;pointer-events:none;transition:opacity .35s var(--ease)}
+  .sheet-mask.show{opacity:1;pointer-events:auto}
+  .sheet{position:fixed;left:0;right:0;bottom:0;z-index:210;background:#fff;border-radius:28px 28px 0 0;padding:0 24px calc(env(safe-area-inset-bottom) + 28px);transform:translateY(100%);transition:transform .45s var(--ease);max-height:80vh;overflow-y:auto;box-shadow:0 -20px 60px rgba(0,0,0,.15)}
+  .sheet.show{transform:translateY(0)}
+  .sheet::-webkit-scrollbar{width:0}
+  .sheet-grab{width:40px;height:4px;background:#E8E0D8;border-radius:2px;margin:12px auto 20px;cursor:pointer}
+  .sheet-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:100px;font-size:12px;font-weight:600;background:rgba(255,140,66,.1);color:#E8722A;margin-bottom:16px}
+  .sheet-title{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px;line-height:1.35;color:var(--txt-main)}
+  .sheet-emotion{font-size:14px;color:#E8722A;margin-bottom:22px;display:flex;align-items:center;gap:8px;font-weight:500}
+
+  .voice-player{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#FFF4E8,#FFE8D4);border:1px solid rgba(255,140,66,.15);border-radius:20px;padding:14px 18px 14px 14px;margin-bottom:22px;cursor:pointer}
+  .voice-btn{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#FF8C42,#FFB347);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;color:#fff;box-shadow:0 6px 18px rgba(255,140,66,.3)}
+  .voice-info{flex:1}
+  .voice-label{font-size:15px;color:#3D2E20;font-weight:600}
+  .voice-hint{font-size:11px;color:#B9AC9E;margin-top:3px}
+  .voice-wave{display:flex;gap:3px;align-items:center;height:24px}
+  .voice-wave span{width:3px;background:var(--brand);border-radius:2px;height:8px}
+  .voice-player.playing .voice-wave span{animation:wave 1s ease-in-out infinite}
+  .voice-wave span:nth-child(2){animation-delay:.15s}
+  .voice-wave span:nth-child(3){animation-delay:.3s}
+  .voice-wave span:nth-child(4){animation-delay:.45s}
+  .voice-wave span:nth-child(5){animation-delay:.6s}
+  @keyframes wave{0%,100%{height:8px}50%{height:22px}}
+
+  .explain-text{background:#FFFAF5;border-radius:18px;padding:22px;font-size:17px;line-height:2.2;color:#5B5248;margin-bottom:22px}
+  .sentence{padding:3px 5px;border-radius:6px;transition:all .35s var(--ease);display:inline}
+  .sentence.active{background:rgba(255,140,66,.18);color:#E8722A;font-weight:500}
+
+  .value-title{font-size:13px;color:#B9AC9E;margin-bottom:12px;letter-spacing:.05em;font-weight:500}
+  .value-badges{display:flex;gap:10px;flex-wrap:wrap}
+  .v-badge{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:100px;font-size:14px;font-weight:600}
+  .v-school{background:rgba(78,205,196,.1);color:#2AA89E;border:1px solid rgba(78,205,196,.25)}
+  .v-know{background:rgba(255,140,66,.1);color:#E8722A;border:1px solid rgba(255,140,66,.22)}
+  .v-love{background:rgba(255,107,129,.1);color:#F0556B;border:1px solid rgba(255,107,129,.22)}
+  .sheet-close{margin-top:24px;width:100%;height:52px;border-radius:16px;background:#F5F0EA;color:#8A7A6A;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+
+  .guide-float{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 20px);z-index:150;background:rgba(61,46,32,.92);color:#fff;padding:12px 22px;border-radius:100px;font-size:13px;font-weight:500;box-shadow:0 8px 30px rgba(0,0,0,.2);white-space:nowrap;animation:floatUp .5s var(--ease);backdrop-filter:blur(10px)}
+  @keyframes floatUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* ====== B7/B8 手机框与多屏 ====== */
+.stage{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#241d17;padding:24px 0}
+.phone{width:375px;height:812px;position:relative;overflow:hidden;border-radius:44px;background:var(--page-bg);box-shadow:0 40px 90px rgba(0,0,0,.5),0 0 0 11px #14100c,0 0 0 13px #2f2823}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;display:none;background:var(--page-bg);-webkit-overflow-scrolling:touch}
+.screen.on{display:block}
+.screen::-webkit-scrollbar{width:0}
+.screen .warm-page{min-height:100%}
+.phone .sheet-mask,.phone .sheet{position:absolute}
+.phone .guide-float{position:absolute;bottom:82px;z-index:150}
+.phone .modal-mask,.phone .modal{position:absolute}
+/* ====== 底部导航 ====== */
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:66px;background:rgba(255,252,247,.97);backdrop-filter:blur(12px);border-top:1px solid #F0E6DA;display:flex;z-index:160;padding-bottom:6px}
+.tab{flex:1;text-align:center;padding-top:9px;font-size:10px;color:#A2937F;cursor:pointer;user-select:none;transition:color .2s}
+.tab .ti{font-size:21px;display:block;margin-bottom:2px;filter:grayscale(.55);opacity:.75}
+.tab.on{color:#FF8C42;font-weight:700}
+.tab.on .ti{filter:none;opacity:1}
+/* ====== 封面 ====== */
+#scr-cover{background:#2a211a}
+.cover-bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.cover-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,14,9,.15),rgba(20,14,9,.72))}
+.cover-inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 26px 54px;text-align:center}
+.cover-logo{width:64px;height:64px;border-radius:18px;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,.35);margin-bottom:14px}
+.cover-kicker{font-size:12px;letter-spacing:5px;color:rgba(255,255,255,.75);margin-bottom:8px}
+.cover-title{font-size:30px;font-weight:800;color:#fff;letter-spacing:3px;line-height:1.45;text-shadow:0 4px 18px rgba(0,0,0,.4);cursor:pointer}
+.cover-sub{font-size:13px;color:rgba(255,255,255,.82);margin-top:12px;line-height:1.8}
+.cover-letter{margin-top:26px;width:100%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(6px);border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:transform .25s var(--ease)}
+.cover-letter:active{transform:scale(.97)}
+.cover-letter .cl-ico{font-size:26px}
+.cover-letter .cl-t{font-size:15px;font-weight:700;color:#fff;text-align:left}
+.cover-letter .cl-s{font-size:11px;color:rgba(255,255,255,.78);text-align:left;margin-top:3px}
+.cover-enter{margin-top:16px;width:100%;height:50px;line-height:50px;border-radius:16px;background:linear-gradient(135deg,#FF8C42,#FFB347);color:#fff;font-size:16px;font-weight:700;letter-spacing:4px;cursor:pointer;box-shadow:0 10px 28px rgba(255,140,66,.4)}
+/* ====== 页面文案卡 ====== */
+.xt-intro{margin:14px 16px 0;background:linear-gradient(135deg,#FFF9F2,#FFF3E8);border:1px solid #F5E2CE;border-radius:16px;padding:14px 16px;box-shadow:0 4px 14px rgba(255,140,66,.08)}
+.xt-intro.one{display:flex;gap:11px;align-items:flex-start}
+.xt-intro .xi-ico{font-size:19px;flex-shrink:0;margin-top:1px}
+.xt-intro .xi-text{font-size:13.5px;line-height:1.8;color:#5B4632;font-weight:500}
+.xt-intro .xi-title{font-size:15.5px;font-weight:800;color:#E8722A;margin-bottom:6px}
+.xt-intro .xi-guide{font-size:14px;font-weight:700;color:#3D2E20;margin-bottom:8px}
+.xt-intro .xi-list{margin:6px 0 8px 18px;font-size:12.8px;color:#6B5B48;line-height:1.8}
+.xt-intro .xi-list li{margin:3px 0}
+.xt-intro .xi-deep{font-size:12.8px;color:#8A6A4A;background:rgba(255,255,255,.72);border-radius:10px;padding:8px 10px;line-height:1.75;margin-top:6px}
+.xt-intro .xi-voice{margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#FF8C42,#FFB347);color:#fff;font-size:13px;font-weight:700;padding:8px 18px;border-radius:100px;cursor:pointer;box-shadow:0 6px 16px rgba(255,140,66,.3)}
+.xt-intro .xi-voice:active{transform:scale(.96)}
+/* ====== 转换页辅助 ====== */
+.screen .chip-scroll,.screen .reward-scroll{overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+.screen .chip-scroll::-webkit-scrollbar,.screen .reward-scroll::-webkit-scrollbar{height:0}
+.xt-img{background:linear-gradient(135deg,#FFE7D2,#FFD9BC);min-height:64px;border-radius:10px}
+/* ====== 轻提示 ====== */
+.xt-toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);z-index:300;background:rgba(30,24,18,.92);color:#fff;font-size:13px;padding:10px 20px;border-radius:100px;opacity:0;pointer-events:none;transition:opacity .3s}
+.xt-toast.show{opacity:1}
+/* ====== 报告族页互跳 chip ====== */
+.pn-item{cursor:pointer}
+
+.phone{position:relative}
+.pv-bar{position:absolute;right:12px;bottom:92px;z-index:70;display:flex;align-items:center;gap:8px;max-width:230px;padding:9px 14px;border-radius:999px;background:#0f766e;color:#fff;box-shadow:0 6px 18px rgba(15,118,110,.35);cursor:pointer;font-size:14px;user-select:none}
+.pv-bar.playing{background:#fff;color:#0f766e;border:2px solid #0f766e}
+.pv-txt{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.pv-state{font-size:15px}
+.xt-intro.one{flex-wrap:wrap}
+.xt-intro.one .xi-text{flex:1}
+.xt-intro.one .xi-voice{flex-basis:100%;margin-top:10px;justify-content:center}
+
+/* ====== face 页样式（rpx→px）====== */
+/* 人脸签到管理页面样式 */
+.page {
+  min-height: 100vh;
+  background: #FFF8F0;
+  padding: 16px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  color: #8C8C8C;
+  font-size: 14px;
+}
+
+.section-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2D2D2D;
+  margin-bottom: 12px;
+}
+
+.child-list {
+  padding-bottom: 20px;
+}
+
+.child-item {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+.child-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.child-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.child-info {
+  flex: 1;
+}
+
+.child-name {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.child-school {
+  display: block;
+  font-size: 12px;
+  color: #8C8C8C;
+  margin-top: 2px;
+}
+
+.child-status {
+  margin-left: 6px;
+}
+
+.status-tag {
+  display: block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.status-tag.registered {
+  background: #E8F8E8;
+  color: #2E7D32;
+}
+
+.status-tag.unregistered {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+.child-delete {
+  margin-left: 4px;
+  padding: 4px 6px;
+}
+
+.child-delete text {
+  font-size: 11px;
+  color: #D32F2F;
+}
+
+.info-card {
+  background: #FFF8E1;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 12px;
+  border-left: 3px solid #FFB300;
+}
+
+.info-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2D2D2D;
+  margin-bottom: 6px;
+}
+
+.info-text {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.8;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40vh;
+}
+
+.empty-icon { font-size: 40px; }
+.empty-text { font-size: 14px; color: #8C8C8C; margin-top: 8px; }
+.empty-desc { font-size: 12px; color: #BFBFBF; margin-top: 4px; }
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40vh;
+}
+
+.error-icon { font-size: 40px; }
+.error-text { font-size: 14px; color: #D32F2F; margin-top: 8px; }
+.btn-retry {
+  margin-top: 12px;
+  padding: 8px 24px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 20px;
+  border: none;
+}
+.btn-retry::after { border: none; }
+
+/* 拍照弹窗 */
+.camera-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.camera-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.camera-card {
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  padding: 20px 18px 30px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.camera-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.camera-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2D2D2D;
+}
+
+.camera-close {
+  font-size: 16px;
+  color: #8C8C8C;
+  padding: 4px;
+}
+
+.photo-preview {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.preview-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  border: 2px solid #FF8C42;
+}
+
+.btn-retake {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #8C8C8C;
+  background: #FFF5EE;
+  border: 1px solid #E0D0C0;
+  border-radius: 15px;
+  padding: 6px 16px;
+}
+
+.btn-retake::after { border: none; }
+
+.photo-actions {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.btn-camera {
+  width: 150px;
+  height: 150px;
+  line-height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff;
+  font-size: 18px;
+  text-align: center;
+  margin: 0 auto;
+  border: 4px solid #FFF0E0;
+  box-shadow: 0 4px 15px rgba(255,140,66,0.2);
+}
+
+.btn-camera::after { border: none; }
+.btn-camera:active { transform: scale(0.95); }
+
+.status-hint {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  color: #FF8C42;
+  margin-bottom: 8px;
+}
+
+.btn-submit {
+  width: 100%;
+  height: 44px;
+  line-height: 44px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 22px;
+  text-align: center;
+  border: none;
+  margin-top: 8px;
+  box-shadow: 0 2px 6px rgba(255,140,66,0.25);
+}
+
+.btn-submit::after { border: none; }
+.btn-submit.disabled { opacity: 0.5; box-shadow: none; }
+
+.requirements {
+  margin-top: 12px;
+  padding: 10px;
+  background: #FFF8F0;
+  border-radius: 8px;
+}
+
+.req-title {
+  display: block;
+  font-size: 12px;
+  color: #8C8C8C;
+  margin-bottom: 4px;
+}
+
+.req-item {
+  display: block;
+  font-size: 11px;
+  color: #BFBFBF;
+  line-height: 1.6;
+}
+
+/* ====== dailyReport 页样式（rpx→px）====== */
+
+/* 多孩切换条 */
+.child-switch { padding: 6px 12px; background: #FFF8F0; }
+.child-switch-btn { display: flex; align-items: center; gap: 5px; background: #fff; border: 1px solid #FF8C42; border-radius: 20px; padding: 6px 11px; width: fit-content; }
+.child-switch-ico { font-size: 13px; }
+.child-switch-name { font-size: 13px; font-weight: bold; color: #FF8C42; }
+.child-switch-arrow { font-size: 11px; color: #FF8C42; }
+/* 家长端 - 今日成长报告（日报 v3 · 时光信笺） */
+.page {
+  min-height: 100vh;
+  background: #FFF8F0;
+  /* 常驻底部导航高度 50px + safe-area，留出空间避免遮挡 */
+  padding-bottom: 70px;
+}
+
+/* ===== 顶部 nav-bar ===== */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff;
+  gap: 8px;
+}
+
+.nav-back { font-size: 14px; font-weight: 600; padding: 4px 0; }
+.nav-title { font-size: 16px; font-weight: 700; }
+.nav-subtitle { font-size: 12px; opacity: 0.8; margin-left: auto; }
+
+/* ===== Slogan 头部（时光信笺 v3 · daily） ===== */
+.letter-head {
+  background: #FFFDF8;
+  padding: 18px 16px 14px;
+  position: relative;
+  border-bottom: 0.5px solid #f0e8dd;
+}
+
+.letter-head::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.letter-head.daily::before { background: #FF8C42; }
+
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid;
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.stamp.daily { border-color: #FF8C42; color: #FF8C42; }
+
+.slogan-kicker {
+  display: block;
+  font-size: 10px;
+  color: #b8a48e;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.slogan-main {
+  display: block;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.35;
+  color: #1a1a2e;
+  letter-spacing: -0.5px;
+}
+
+.slogan-main .hl { color: #FF8C42; }
+
+.slogan-sub {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #8a7a66;
+  font-weight: 500;
+}
+
+/* ===== 内容区 ===== */
+.demo { padding: 12px 10px 0; }
+
+/* ===== 周报 / 月报快捷入口（暖橙系，参照 view 页 entry-bar） ===== */
+.entry-bar {
+  display: flex;
+  gap: 8px;
+  margin: 10px 10px 0;
+}
+
+.entry-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+
+.entry-emoji { font-size: 16px; }
+
+.entry-txt {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.entry-arrow { font-size: 14px; color: #ccc; }
+
+.sec-t {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 14px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sec-t:first-child { margin-top: 0; }
+.sec-t .bar { width: 3px; height: 14px; border-radius: 1.5px; }
+.sec-t .bar.daily { background: #FF8C42; }
+.sec-t .more { margin-left: auto; font-size: 10px; color: #bbb; font-weight: 400; }
+
+/* ===== 评语卡（完整展示） ===== */
+.comment-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.c-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.c-info { display: flex; flex-direction: column; }
+.c-name { font-size: 12px; font-weight: 700; color: #1a1a2e; }
+.c-role { font-size: 10px; color: #999; margin-top: 1px; }
+.c-stars { margin-left: auto; font-size: 12px; color: #FFD700; letter-spacing: 1px; }
+
+.c-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.7;
+  background: #faf8f4;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.c-text .q { color: #FF8C42; font-weight: 700; }
+
+.c-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+
+.ct {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  background: #FFF0E0;
+  color: #FF8C42;
+}
+
+.ct:nth-child(2) { background: #E8FAF5; color: #2a9d8f; }
+.ct:nth-child(3) { background: #EDF2FF; color: #3B5BDB; }
+.ct:nth-child(4) { background: #FFF8E6; color: #b8860b; }
+
+/* ===== 作业列表（完整条目） ===== */
+.hw-list {
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.hw-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 0;
+  border-bottom: 0.5px solid #f6f2ec;
+  font-size: 12px;
+}
+
+.hw-item:last-child { border-bottom: none; }
+.subj { width: 52px; font-weight: 700; color: #1a1a2e; flex-shrink: 0; }
+.name { flex: 1; color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st { font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.st-done { color: #2a9d8f; }
+.st-wait { color: #FF8C42; }
+.st-none { color: #FF6B6B; }
+
+/* ===== 积分卡（大数字 + 来源拆分） ===== */
+.pts-row { display: flex; align-items: center; gap: 12px; }
+.pts-num { font-size: 26px; font-weight: 800; color: #FF8C42; flex-shrink: 0; }
+.pts-srcs { flex: 1; display: flex; gap: 5px; flex-wrap: wrap; }
+
+.pts-chip {
+  flex: 1;
+  min-width: 70px;
+  text-align: center;
+  background: #faf8f4;
+  border-radius: 8px;
+  padding: 6px 4px;
+  font-size: 10px;
+  color: #999;
+}
+
+/* ===== 今日在托时光（时间轴） ===== */
+.timeline {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tl-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 0.5px solid #f6f2ec;
+}
+
+.tl-item:last-child { border-bottom: none; }
+.tl-icon { font-size: 16px; }
+.tl-body { display: flex; flex-direction: column; }
+.tl-label { font-size: 12px; font-weight: 600; color: #1a1a2e; }
+.tl-time { font-size: 10px; color: #999; margin-top: 1px; }
+
+/* ===== 空态（板块级降级） ===== */
+.empty-tip {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  font-size: 12px;
+  color: #bbb;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.empty-desc {
+  display: block;
+  font-size: 10px;
+  color: #ddd;
+  margin-top: 4px;
+}
+
+/* ===== 底部签名 ===== */
+.foot-note {
+  text-align: center;
+  font-size: 11px;
+  color: #c9b8a4;
+  margin: 20px 0 10px;
+  letter-spacing: 1px;
+}
+
+/* ===== 加载态 ===== */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 248, 240, 0.92);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-text {
+  font-size: 13px;
+  color: #FF8C42;
+}
+
+/* ===== 批5：成长报告 2.0 升级样式 ===== */
+.c-src { font-size: 10px; font-weight: 700; color: #B4531F; background: #FFF1E2; border-radius: 4px; padding: 1px 5px; margin-left: 5px; }
+.c-imgs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.c-img { width: 80px; height: 80px; border-radius: 6px; background: #F5EDE3; }
+.hw-item { flex-wrap: wrap; }
+.hw-fb { flex-basis: 100%; margin-top: 5px; background: #FBF7F1; border-left: 3px solid #FFC38A; border-radius: 0 6px 6px 0; padding: 7px 9px; }
+.hw-fb-comment { display: block; font-size: 12px; color: #3D2E20; line-height: 1.55; }
+.hw-fb-score { display: block; font-size: 11px; color: #FF8C42; font-weight: 700; margin-top: 3px; }
+.hw-fb-imgs { display: flex; gap: 5px; margin-top: 5px; }
+.hw-fb-img { width: 60px; height: 60px; border-radius: 5px; background: #F5EDE3; }
+.pts-num.neg { color: #FF6B6B; }
+.pts-chip.neg { color: #C0392B; border-color: #FFB8B8; background: #FFECEC; }
+.tl-label-row { display: flex; align-items: center; gap: 5px; }
+.tl-face { font-size: 10px; font-weight: 700; color: #2F6BE0; background: #EAF3FF; border-radius: 4px; padding: 0.5px 5px; }
+.tl-face-img { width: 60px; height: 60px; border-radius: 6px; background: #F5EDE3; margin-top: 4px; display: block; }
+
+/* ===== 批5.1：置顶导航栏（日报/周报/月报，吸顶） ===== */
+.period-nav { position: sticky; top: 0; z-index: 20; display: flex; gap: 6px; background: #FFF8F0; padding: 7px 12px; }
+.pn-item { flex: 1; text-align: center; font-size: 13px; font-weight: 700; color: #8A7A6A; background: #fff; border: 0.5px solid #F0E6DA; border-radius: 499.5px; padding: 7px 0; }
+.pn-item.on { background: #FF8C42; color: #fff; border-color: #FF8C42; box-shadow: 0 2px 6px rgba(255,140,66,.25); }
+
+/* ===== 📸 今日到校签到（人脸照片置顶卡） ===== */
+.checkin-card { background:#FFF; border-radius:12px; padding:12px; margin:12px 12px 0; box-shadow:0 2px 10px rgba(27,42,74,0.08); }
+.ck-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.ck-title { font-size:14px; font-weight:700; color:#1B2A4A; }
+.ck-face { font-size:10px; color:#FFF; background:#FF8C42; border-radius:10px; padding:2px 8px; }
+.ck-img { width:100%; height:180px; border-radius:8px; background:#F2E3CE; }
+.ck-time-row { display:flex; align-items:center; gap:6px; margin-top:8px; }
+.ck-time { font-size:18px; font-weight:800; color:#1B2A4A; }
+.ck-label { font-size:12px; color:#8A7A66; }
+
+/* ===== 📷 今日成长相册（当日照片九宫格，签到/作业/批改角标） ===== */
+.album-card { background:#FFF; border-radius:12px; padding:12px; margin:12px 12px 0; box-shadow:0 2px 10px rgba(27,42,74,0.08); }
+.ab-sub { font-size:11px; color:#8A7A66; }
+.ab-grid { display:flex; flex-wrap:wrap; gap:9px; }
+.ab-cell { position:relative; width:100px; height:100px; }
+.ab-img { width:100px; height:100px; border-radius:6px; background:#F2E3CE; }
+.ab-tag { position:absolute; left:4px; bottom:4px; font-size:9px; color:#FFF; border-radius:8px; padding:1px 6px; }
+.ab-tag.t-checkin { background:#2F6BE0; }
+.ab-tag.t-hw { background:#FF8C42; }
+.ab-tag.t-review { background:#2A9D8F; }
+.ab-empty { padding:12px 0; text-align:center; font-size:12px; color:#BBB; }
+.ab-empty-desc { display:block; margin-top:4px; font-size:10px; color:#DDD; }
+.err-block{display:flex;flex-direction:column;align-items:center;padding:30px 0}
+.err-text{color:#9aa0aa;font-size:14px;margin-bottom:12px}
+.retry-btn{background:#FF8C42;color:#fff;border-radius:20px;padding:0 24px}
+
+/* ===== 星级打分（P0 v1.1） ===== */
+.rate-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:6px}
+.rate-stars{display:flex;gap:3px}
+.rate-star{font-size:20px;color:#d1d5db;line-height:1;padding:2px 3px}
+.rate-star.on{color:#f59e0b}
+.rate-hint{font-size:11px;color:#9ca3af}
+.rate-done{font-size:11px;color:#0f766e}
+
+/* ====== report 页样式（rpx→px）====== */
+
+
+/* 多孩切换条 */
+.child-switch {
+  padding: 6px 12px;
+  background: #FFF8F0;
+}
+.child-switch-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #fff;
+  border: 1px solid #FF8C42;
+  border-radius: 20px;
+  padding: 6px 11px;
+  width: fit-content;
+}
+.child-switch-ico { font-size: 13px; }
+.child-switch-name { font-size: 13px; font-weight: bold; color: #FF8C42; }
+.child-switch-arrow { font-size: 11px; color: #FF8C42; }
+/* 家长端 - 每周成长日报查看（v3 周报板块） */
+.page {
+  min-height: 100vh;
+  background: #FFF8F0;
+  /* 常驻底部导航高度 50px + safe-area，留出空间避免遮挡 */
+  padding-bottom: 70px;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff;
+  gap: 8px;
+}
+
+.nav-back { font-size: 14px; font-weight: 600; padding: 4px 0; }
+.nav-title { font-size: 16px; font-weight: 700; }
+.nav-subtitle { font-size: 12px; opacity: 0.8; margin-left: auto; }
+
+/* 日报 / 月报快捷入口 */
+.entry-bar {
+  display: flex;
+  gap: 8px;
+  margin: 10px 10px 0;
+}
+
+.entry-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+
+.entry-emoji { font-size: 16px; }
+
+.entry-txt {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.entry-arrow { font-size: 14px; color: #ccc; }
+
+/* 报告列表 */
+.report-list { margin: 10px; }
+
+.report-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+
+.report-week {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.week-range {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.report-date-icon { font-size: 16px; }
+
+.report-stats {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.mini-stat {
+  flex: 1;
+  text-align: center;
+  background: #FFF8F0;
+  border-radius: 8px;
+  padding: 8px 4px;
+}
+
+.mini-num {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FF8C42;
+  display: block;
+}
+
+.mini-label {
+  font-size: 11px;
+  color: #999;
+  display: block;
+  margin-top: 2px;
+}
+
+.report-comment, .report-auto-comment {
+  font-size: 12px;
+  color: #666;
+  background: #FFF8F0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  display: block;
+  line-height: 1.5;
+}
+
+.report-auto-comment { color: #999; font-style: italic; }
+
+/* 详情弹窗 */
+.modal-mask {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4); z-index: 1000;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.modal-mask.show { opacity: 1; pointer-events: auto; }
+
+.modal {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal.show { transform: translateY(0); }
+
+.modal-content {
+  background: #FFF8F0;
+  border-radius: 20px 20px 0 0;
+  padding: 20px 15px 30px;
+  height: 72vh; /* scroll-view 需明确高度，否则内容截断展示不全 */
+}
+
+.modal-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #2D2D2D;
+  text-align: center;
+}
+
+.report-dates {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+/* ===== v3 周报板块 ===== */
+.v3-section {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+
+.sec-t {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+
+.sec-bar {
+  width: 3px;
+  height: 14px;
+  border-radius: 1.5px;
+  background: #4ECDC4;
+}
+
+.sec-more {
+  margin-left: auto;
+  font-size: 10px;
+  color: #bbb;
+  font-weight: 400;
+}
+
+/* a) 出勤卡 */
+.attendance-card {
+  display: flex;
+  align-items: center;
+  background: #EFFAF8;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.att-main { display: flex; flex-direction: column; }
+
+.att-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.2;
+}
+
+.att-unit {
+  font-size: 12px;
+  font-weight: 400;
+  color: #999;
+}
+
+.att-desc {
+  font-size: 10px;
+  color: #999;
+  margin-top: 3px;
+}
+
+.att-side {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.att-item {
+  font-size: 11px;
+  color: #666;
+  background: #fff;
+  padding: 4px 9px;
+  border-radius: 499.5px;
+}
+
+.att-item.all-in {
+  color: #2a9d8f;
+  font-weight: 600;
+}
+
+/* b) 老师评价 */
+.eval-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eval-item {
+  display: flex;
+  gap: 5px;
+  align-items: flex-start;
+  background: #faf8f4;
+  border-radius: 6px;
+  padding: 7px 8px;
+}
+
+.eval-emoji { font-size: 11px; }
+
+.eval-text {
+  flex: 1;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.eval-sum {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.eval-sum .e {
+  flex: 1;
+  background: #faf8f4;
+  border-radius: 6px;
+  padding: 8px 4px;
+  text-align: center;
+}
+
+.eval-sum .emoji { font-size: 16px; display: block; }
+.eval-sum .n { font-size: 18px; font-weight: 800; display: block; margin: 2px 0; }
+.eval-sum .l { font-size: 10px; color: #999; display: block; }
+
+.eval-sum .e.good .n { color: #2a9d8f; }
+.eval-sum .e.mid .n { color: #FF8C42; }
+.eval-sum .e.tip .n { color: #3B5BDB; }
+
+/* c) 学习要点 */
+.point-list {
+  background: #faf8f4;
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+.point-item {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  padding: 7px 0;
+  border-bottom: 0.5px solid #f6f2ec;
+  font-size: 12px;
+}
+
+.point-item:last-child { border-bottom: none; }
+
+.point-item .dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #fff;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.point-item .dot.up { background: #4ECDC4; }
+.point-item .dot.down { background: #FF6B6B; }
+
+.point-item .txt {
+  flex: 1;
+  color: #555;
+  line-height: 1.6;
+}
+
+.point-item .strong { color: #1a1a2e; font-weight: 700; }
+.point-item .sep { color: #bbb; }
+
+/* d) 作业分析 */
+.hw-anal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.hw-anal .a {
+  width: calc(50% - 3px);
+  background: #faf8f4;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.hw-anal .a .t { font-size: 10px; color: #999; display: block; }
+.hw-anal .a .v { font-size: 15px; font-weight: 800; color: #1a1a2e; margin-top: 2px; display: block; }
+
+.hw-fallback {
+  display: flex;
+  gap: 6px;
+}
+
+.hw-fallback .hw-stat {
+  flex: 1;
+  background: #faf8f4;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.hw-stat .t { font-size: 10px; color: #999; display: block; }
+.hw-stat .v { font-size: 15px; font-weight: 800; color: #1a1a2e; margin-top: 2px; display: block; }
+.hw-stat .v.rate-v { color: #3B5BDB; }
+
+/* 进度条 */
+.bar {
+  height: 4px;
+  border-radius: 2px;
+  background: #f0ece8;
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+.bar-i {
+  height: 100%;
+  border-radius: 2px;
+  background: #4ECDC4;
+}
+
+.bar-i.done-i { background: #2a9d8f; }
+.bar-i.rate-i { background: #3B5BDB; }
+
+/* 评语卡 */
+.comment-card {
+  background: #faf8f4;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.comment-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.7;
+  display: block;
+}
+
+.comment-text.auto { color: #999; font-style: italic; }
+
+.close-btn {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #FFF5EE;
+  color: #8C8C8C;
+  border: none;
+}
+
+.close-btn::after { border: none; }
+
+/* 空状态 */
+.empty-tip {
+  text-align: center;
+  padding: 50px 0;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.empty-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+.empty-desc { font-size: 11px; color: #ddd; display: block; margin-top: 4px; }
+
+/* ===== 批5：周报评价富展示（星标 + 老师/日期） ===== */
+.eval-rich-head { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.eval-stars { color: #FFB020; font-size: 12px; letter-spacing: 1px; }
+.eval-rich-meta { font-size: 11px; color: #A2937F; }
+
+/* ===== 批5.1：置顶导航栏（日报/周报/月报，吸顶） ===== */
+.period-nav { position: sticky; top: 0; z-index: 20; display: flex; gap: 6px; background: #FFF8F0; padding: 7px 12px; }
+.pn-item { flex: 1; text-align: center; font-size: 13px; font-weight: 700; color: #8A7A6A; background: #fff; border: 0.5px solid #F0E6DA; border-radius: 499.5px; padding: 7px 0; }
+.pn-item.on { background: #FF8C42; color: #fff; border-color: #FF8C42; box-shadow: 0 2px 6px rgba(255,140,66,.25); }
+
+/* ===== 成长相册（照片时间线，三列网格） ===== */
+.album-block {
+  margin: 10px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.album-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+.album-empty {
+  font-size: 12px;
+  color: #bbb;
+  text-align: center;
+  line-height: 1.6;
+  padding: 12px 0;
+}
+.album-group { margin-bottom: 10px; }
+.album-group:last-child { margin-bottom: 0; }
+.album-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8A7A6A;
+  margin-bottom: 6px;
+}
+.album-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.album-item {
+  position: relative;
+  width: calc((100% - 12px) / 3);
+}
+.album-img {
+  width: 100%;
+  height: 100px;
+  border-radius: 6px;
+  background: #F5EDE3;
+  display: block;
+}
+.album-tag {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  font-size: 9px;
+  color: #fff;
+  background: rgba(0,0,0,0.45);
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.6;
+}
+
+/* ===== ✨ AI 成长总结 ===== */
+.ai-summary-card {
+  background: #FFFDF8;
+  border: 0.5px solid #FFE3C9;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+}
+.ai-summary-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FF8C42;
+  margin-bottom: 5px;
+}
+.ai-summary-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.8;
+  display: block;
+}
+.ai-badge { font-size:10px; color:#B07A30; border:0.5px solid #E0B878; border-radius:6px; padding:1px 6px; margin-left:6px; font-weight:600; }
+.ai-foot { display:block; margin-top:6px; font-size:10px; color:#C0A878; text-align:right; }
+
+/* ====== monthly 页样式（rpx→px）====== */
+/* 多孩切换条 */
+.child-switch { padding: 6px 12px; background: #FFF8F0; }
+.child-switch-btn { display: flex; align-items: center; gap: 5px; background: #fff; border: 1px solid #FF8C42; border-radius: 20px; padding: 6px 11px; width: fit-content; }
+.child-switch-ico { font-size: 13px; }
+.child-switch-name { font-size: 13px; font-weight: bold; color: #FF8C42; }
+.child-switch-arrow { font-size: 11px; color: #FF8C42; }
+/* 家长端 - 月度成长报告（月报 v3 · 时光信笺：暖白底 + 深蓝锚色体系 #3B5BDB） */
+.page {
+  min-height: 100vh;
+  background: #FFF8F0;
+  /* 常驻底部导航高度 50px + safe-area，留出空间避免遮挡 */
+  padding-bottom: 70px;
+}
+
+/* ===== 顶部 nav-bar ===== */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff;
+  gap: 8px;
+}
+
+.nav-back { font-size: 14px; font-weight: 600; padding: 4px 0; }
+.nav-title { font-size: 16px; font-weight: 700; }
+.nav-subtitle { font-size: 12px; opacity: 0.8; margin-left: auto; }
+
+/* ===== 月份切换条 ===== */
+.month-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #FFFDF8;
+  border-bottom: 0.5px solid #f0e8dd;
+}
+
+.ms-btn {
+  font-size: 12px;
+  color: #3B5BDB;
+  font-weight: 600;
+  padding: 4px 10px;
+  background: #EDF2FF;
+  border-radius: 499.5px;
+}
+
+.ms-btn.disabled { color: #c9c3d8; background: #f4f2f8; }
+
+.ms-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* ===== 内容区 ===== */
+.demo { padding: 12px 10px 0; }
+
+/* ===== 月度 KPI 2×2 ===== */
+.month-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.month-grid .m {
+  width: calc(50% - 4px);
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 8px;
+  text-align: center;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.month-grid .m .n {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  display: block;
+}
+
+.month-grid .m .l {
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+  display: block;
+}
+
+.mg1 .n { color: #2a9d8f; }
+.mg2 .n { color: #FF8C42; }
+.mg3 .n { color: #3B5BDB; }
+.mg4 .n { color: #b8860b; }
+
+/* ===== 出勤趋势柱状图 ===== */
+.trend {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 8px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.trend .t {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 10px;
+}
+
+.trend .bars {
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.trend .bars .b {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.trend .bars .b .v {
+  font-size: 9px;
+  color: #999;
+  margin-bottom: 3px;
+  display: block;
+}
+
+.trend .bars .b .bar {
+  width: 18px;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, #4ECDC4, #3dbdb5);
+}
+
+.trend .bars .b .bar.hot {
+  background: linear-gradient(180deg, #FFB347, #f0a030);
+}
+
+.trend .bars .b .w {
+  font-size: 9px;
+  color: #bbb;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ===== 板块标题（深蓝锚色） ===== */
+.sec-t {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 14px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sec-t .bar { width: 3px; height: 14px; border-radius: 1.5px; }
+.sec-t .bar.monthly { background: #3B5BDB; }
+
+/* ===== 点评卡（完整展示） ===== */
+.comment-card {
+  background: #fff;
+  border: 0.5px solid #e4ebfb;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.c-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4ECDC4, #2a9d8f);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.c-info { display: flex; flex-direction: column; }
+.c-name { font-size: 12px; font-weight: 700; color: #1a1a2e; }
+.c-role { font-size: 10px; color: #999; margin-top: 1px; }
+
+.c-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.7;
+  background: #faf8f4;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.c-text .q { color: #FF8C42; font-weight: 700; }
+
+.c-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+
+.ct {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  background: #EDF2FF;
+  color: #3B5BDB;
+}
+
+.ct:nth-child(2) { background: #FFF0E0; color: #FF8C42; }
+.ct:nth-child(3) { background: #E8FAF5; color: #2a9d8f; }
+.ct:nth-child(4) { background: #FFF8E6; color: #b8860b; }
+
+.comment-empty {
+  background: #fff;
+  border: 0.5px dashed #e0d8cc;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  font-size: 12px;
+  color: #bbb;
+}
+
+/* ===== 成长亮点（深色卡） ===== */
+.highlight {
+  background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 12px;
+  color: #fff;
+}
+
+.highlight .t {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFB347;
+  margin-bottom: 6px;
+}
+
+.highlight .row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 3px 0;
+  color: #e8e8f0;
+}
+
+/* ===== 底部签名 ===== */
+.foot-note {
+  text-align: center;
+  font-size: 11px;
+  color: #c9b8a4;
+  margin: 20px 0 10px;
+  letter-spacing: 1px;
+}
+
+/* ===== 空态 ===== */
+.empty-tip {
+  margin: 20px 10px 0;
+  background: #fff;
+  border-radius: 12px;
+  padding: 40px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #bbb;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.empty-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+.empty-desc {
+  display: block;
+  font-size: 11px;
+  color: #ddd;
+  margin-top: 6px;
+}
+
+/* ===== 加载态 ===== */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 248, 240, 0.92);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-text {
+  font-size: 13px;
+  color: #3B5BDB;
+}
+
+/* ===== 批5.1：置顶导航栏（日报/周报/月报，吸顶；月报蓝色主题） ===== */
+.period-nav { position: sticky; top: 0; z-index: 20; display: flex; gap: 6px; background: #F6F8FF; padding: 7px 12px; }
+.pn-item { flex: 1; text-align: center; font-size: 13px; font-weight: 700; color: #7A7A9A; background: #fff; border: 0.5px solid #E4E8F5; border-radius: 499.5px; padding: 7px 0; }
+.pn-item.on { background: #3B5BDB; color: #fff; border-color: #3B5BDB; box-shadow: 0 2px 6px rgba(59,91,219,.25); }
+
+/* ===== ✨ AI 成长总结 ===== */
+.ai-summary-card {
+  background: #FFFDF8;
+  border: 0.5px solid #FFE3C9;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+}
+.ai-summary-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FF8C42;
+  margin-bottom: 5px;
+}
+.ai-summary-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.8;
+  display: block;
+}
+.ai-badge { font-size:10px; color:#B07A30; border:0.5px solid #E0B878; border-radius:6px; padding:1px 6px; margin-left:6px; font-weight:600; }
+.ai-foot { display:block; margin-top:6px; font-size:10px; color:#C0A878; text-align:right; }
+
+/* ====== semester 页样式（rpx→px）====== */
+/* 多孩切换条 */
+.child-switch { padding: 6px 12px; background: #FFF8F0; }
+.child-switch-btn { display: flex; align-items: center; gap: 5px; background: #fff; border: 1px solid #FF8C42; border-radius: 20px; padding: 6px 11px; width: fit-content; }
+.child-switch-ico { font-size: 13px; }
+.child-switch-name { font-size: 13px; font-weight: bold; color: #FF8C42; }
+.child-switch-arrow { font-size: 11px; color: #FF8C42; }
+/* 家长端 - 月度成长报告（月报 v3 · 时光信笺：暖白底 + 深蓝锚色体系 #3B5BDB） */
+.page {
+  min-height: 100vh;
+  background: #FFF8F0;
+  /* 常驻底部导航高度 50px + safe-area，留出空间避免遮挡 */
+  padding-bottom: 70px;
+}
+
+/* ===== 顶部 nav-bar ===== */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff;
+  gap: 8px;
+}
+
+.nav-back { font-size: 14px; font-weight: 600; padding: 4px 0; }
+.nav-title { font-size: 16px; font-weight: 700; }
+.nav-subtitle { font-size: 12px; opacity: 0.8; margin-left: auto; }
+
+/* ===== 月份切换条 ===== */
+.month-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #FFFDF8;
+  border-bottom: 0.5px solid #f0e8dd;
+}
+
+.ms-btn {
+  font-size: 12px;
+  color: #3B5BDB;
+  font-weight: 600;
+  padding: 4px 10px;
+  background: #EDF2FF;
+  border-radius: 499.5px;
+}
+
+.ms-btn.disabled { color: #c9c3d8; background: #f4f2f8; }
+
+.ms-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* ===== 内容区 ===== */
+.demo { padding: 12px 10px 0; }
+
+/* ===== 月度 KPI 2×2 ===== */
+.month-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.month-grid .m {
+  width: calc(50% - 4px);
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 8px;
+  text-align: center;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.month-grid .m .n {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  display: block;
+}
+
+.month-grid .m .l {
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+  display: block;
+}
+
+.mg1 .n { color: #2a9d8f; }
+.mg2 .n { color: #FF8C42; }
+.mg3 .n { color: #3B5BDB; }
+.mg4 .n { color: #b8860b; }
+
+/* ===== 出勤趋势柱状图 ===== */
+.trend {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 8px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.trend .t {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 10px;
+}
+
+.trend .bars {
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.trend .bars .b {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.trend .bars .b .v {
+  font-size: 9px;
+  color: #999;
+  margin-bottom: 3px;
+  display: block;
+}
+
+.trend .bars .b .bar {
+  width: 18px;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, #4ECDC4, #3dbdb5);
+}
+
+.trend .bars .b .bar.hot {
+  background: linear-gradient(180deg, #FFB347, #f0a030);
+}
+
+.trend .bars .b .w {
+  font-size: 9px;
+  color: #bbb;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ===== 板块标题（深蓝锚色） ===== */
+.sec-t {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 14px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sec-t .bar { width: 3px; height: 14px; border-radius: 1.5px; }
+.sec-t .bar.monthly { background: #3B5BDB; }
+
+/* ===== 点评卡（完整展示） ===== */
+.comment-card {
+  background: #fff;
+  border: 0.5px solid #e4ebfb;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.c-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4ECDC4, #2a9d8f);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.c-info { display: flex; flex-direction: column; }
+.c-name { font-size: 12px; font-weight: 700; color: #1a1a2e; }
+.c-role { font-size: 10px; color: #999; margin-top: 1px; }
+
+.c-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.7;
+  background: #faf8f4;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.c-text .q { color: #FF8C42; font-weight: 700; }
+
+.c-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+
+.ct {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  background: #EDF2FF;
+  color: #3B5BDB;
+}
+
+.ct:nth-child(2) { background: #FFF0E0; color: #FF8C42; }
+.ct:nth-child(3) { background: #E8FAF5; color: #2a9d8f; }
+.ct:nth-child(4) { background: #FFF8E6; color: #b8860b; }
+
+.comment-empty {
+  background: #fff;
+  border: 0.5px dashed #e0d8cc;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  font-size: 12px;
+  color: #bbb;
+}
+
+/* ===== 成长亮点（深色卡） ===== */
+.highlight {
+  background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 12px;
+  color: #fff;
+}
+
+.highlight .t {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFB347;
+  margin-bottom: 6px;
+}
+
+.highlight .row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 3px 0;
+  color: #e8e8f0;
+}
+
+/* ===== 底部签名 ===== */
+.foot-note {
+  text-align: center;
+  font-size: 11px;
+  color: #c9b8a4;
+  margin: 20px 0 10px;
+  letter-spacing: 1px;
+}
+
+/* ===== 空态 ===== */
+.empty-tip {
+  margin: 20px 10px 0;
+  background: #fff;
+  border-radius: 12px;
+  padding: 40px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #bbb;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.empty-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+.empty-desc {
+  display: block;
+  font-size: 11px;
+  color: #ddd;
+  margin-top: 6px;
+}
+
+/* ===== 加载态 ===== */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 248, 240, 0.92);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-text {
+  font-size: 13px;
+  color: #3B5BDB;
+}
+
+/* ===== 批5.1：置顶导航栏（日报/周报/月报，吸顶；月报蓝色主题） ===== */
+.period-nav { position: sticky; top: 0; z-index: 20; display: flex; gap: 6px; background: #F6F8FF; padding: 7px 12px; }
+.pn-item { flex: 1; text-align: center; font-size: 13px; font-weight: 700; color: #7A7A9A; background: #fff; border: 0.5px solid #E4E8F5; border-radius: 499.5px; padding: 7px 0; }
+.pn-item.on { background: #3B5BDB; color: #fff; border-color: #3B5BDB; box-shadow: 0 2px 6px rgba(59,91,219,.25); }
+
+/* ===== ✨ AI 成长总结 ===== */
+.ai-summary-card {
+  background: #FFFDF8;
+  border: 0.5px solid #FFE3C9;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+}
+.ai-summary-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FF8C42;
+  margin-bottom: 5px;
+}
+.ai-summary-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.8;
+  display: block;
+}
+.ai-badge { font-size:10px; color:#B07A30; border:0.5px solid #E0B878; border-radius:6px; padding:1px 6px; margin-left:6px; font-weight:600; }
+.ai-foot { display:block; margin-top:6px; font-size:10px; color:#C0A878; text-align:right; }
+
+/* ====== homework 页样式（rpx→px）====== */
+/* 家长作业 v3.0 - Impeccable 重新设计 */
+
+.warm-page {
+  min-height: 100vh; background: #FFF8F0;
+  font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+  color: #1A1A2E; padding-bottom: 70px;
+}
+.warm-head {
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  padding: 48px 20px 28px; border-radius: 0 0 28px 28px;
+  color: #FFFFFF; position: relative; overflow: hidden;
+}
+.warm-head::before {
+  content: ''; position: absolute;
+  top: -60px; right: -40px;
+  width: 240px; height: 240px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.head-title { font-size: 20px; font-weight: 700; position: relative; }
+.head-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; position: relative; }
+
+.tab-strip {
+  display: flex; gap: 8px;
+  margin: 16px 16px 0; padding: 4px;
+  background: #F0ECE8; border-radius: 12px;
+}
+.tab {
+  flex: 1; text-align: center;
+  padding: 8px 4px; border-radius: 10px;
+  font-size: 12px; font-weight: 500; color: #7A7A9A;
+}
+.tab.on { background: #FFFFFF; color: #1A1A2E; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+.chip-strip { margin: 14px 16px 0; }
+.chip-scroll { white-space: nowrap; }
+.chip {
+  display: inline-flex; padding: 8px 14px;
+  margin-right: 6px; border-radius: 18px;
+  background: #FFFFFF; font-size: 12px; font-weight: 500;
+  border: 1.5px solid #E8E0D8;
+}
+.chip.on { background: #FF8C42; color: #fff; border-color: #FF8C42; box-shadow: 0 2px 8px rgba(255,140,66,0.25); }
+
+.card-list { padding: 14px 16px 0; }
+.hw-card {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  background: #FFFFFF; border-radius: 14px; padding: 14px;
+  margin-bottom: 10px; box-shadow: 0 2px 10px rgba(255,140,66,0.08);
+}
+.hw-left { flex: 1; }
+.hw-subject { font-size: 14px; font-weight: 600; display: block; }
+.hw-content { font-size: 12px; color: #7A7A9A; display: block; margin-top: 2px; }
+.hw-date { font-size: 11px; color: #B0A8A0; display: block; margin-top: 4px; }
+.hw-status {
+  font-size: 11px; padding: 4px 10px; border-radius: 8px;
+  font-weight: 600; flex-shrink: 0;
+}
+.hw-status.warn { background: #FFF0E0; color: #E67E22; }
+.hw-status.info { background: #E8F8F6; color: #2A9D8F; }
+.hw-status.success { background: #E8F8E8; color: #27AE60; }
+
+.stat-row { display: flex; gap: 10px; padding: 14px 16px 0; }
+.stat-cell {
+  flex: 1; background: #FFFFFF; border-radius: 14px;
+  padding: 16px 8px; text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.stat-val { font-size: 26px; font-weight: 800; color: #FF8C42; display: block; }
+.stat-val.warn { color: #E67E22; }
+.stat-val.mint { color: #4ECDC4; }
+.stat-lbl { font-size: 11px; color: #7A7A9A; margin-top: 4px; display: block; }
+
+.comment-card {
+  background: #FFFFFF; border-radius: 14px; padding: 14px;
+  margin-bottom: 10px; box-shadow: 0 2px 10px rgba(255,140,66,0.08);
+}
+.comment-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.comment-avatar { width: 36px; height: 36px; border-radius: 50%; }
+.comment-info { flex: 1; }
+.comment-teacher { font-size: 13px; font-weight: 600; display: block; }
+.comment-subject { font-size: 11px; color: #7A7A9A; display: block; }
+.comment-body { font-size: 13px; line-height: 1.7; display: block; margin-bottom: 8px; }
+.comment-foot { display: flex; justify-content: space-between; }
+.comment-score { font-size: 12px; color: #FF8C42; font-weight: 600; }
+.comment-date { font-size: 11px; color: #B0A8A0; }
+
+.empty-text { text-align: center; padding: 40px 0; font-size: 14px; color: #B0A8A0; }
+
+/* 上传区 */
+.upload-card {
+  margin: 16px; padding: 18px;
+  background: #FFFFFF; border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(255,140,66,0.10);
+}
+.section-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+.upload-item { position: relative; }
+.upload-img { width: 100%; height: 80px; border-radius: 8px; }
+.upload-del {
+  position: absolute; top: -6px; right: -6px;
+  width: 20px; height: 20px; line-height: 20px; text-align: center;
+  border-radius: 50%; background: #FF6B6B; color: #FFF;
+  font-size: 14px; font-weight: 700;
+}
+.upload-actions { margin-bottom: 12px; }
+.upload-btn {
+  width: 100%; height: 80px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  border: 1.5px dashed #E8E0D8; border-radius: 12px;
+  background: #FFF8F0; color: #7A7A9A;
+}
+.upload-btn-icon { font-size: 28px; display: block; }
+.upload-btn-text { font-size: 12px; margin-top: 4px; }
+.btn-primary {
+  width: 100%; height: 46px; line-height: 46px; text-align: center;
+  border: none; border-radius: 12px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #FFFFFF; font-size: 15px; font-weight: 700;
+  box-shadow: 0 4px 14px rgba(255,140,66,0.30);
+}
+
+.chip-dot { font-size: 12px; margin-right: 2px; }
+
+.field{padding: 0 16px;margin-bottom: 14px;}
+.field-label{font-size: 13px;font-weight: 600;display: block;margin-bottom: 6px;color: #333;}
+.chip-scroll{white-space: nowrap;padding: 4px 0;}
+.chip{display: inline-flex;padding: 6px 14px;margin-right: 8px;border-radius: 18px;background: #fff;font-size: 13px;border: 1.5px solid #e8e0d8;color: #7a7a9a;}
+.chip.on{background: #FF8C42;color: #fff;border-color: #FF8C42;box-shadow: 0 2px 8px rgba(255,140,66,0.25);}
+.subject-row{display: flex;flex-wrap: wrap;gap: 8px;}
+.subject-chip{padding: 6px 16px;border-radius: 18px;background: #fff;font-size: 13px;border: 1.5px solid #e8e0d8;color: #7a7a9a;}
+.subject-chip.on{background: #FF8C42;color: #fff;border-color: #FF8C42;}
+/* 【科目多选】chips 容器 + 全选 */
+.subject-chips{display: flex;flex-wrap: wrap;gap: 8px;}
+.subject-chip.all{font-weight: 700;border-style: dashed;}
+.subject-chip.all.on{border-style: solid;box-shadow: 0 2px 8px rgba(255,140,66,0.25);}
+.subject-chip:active{transform: scale(0.96);}
+.field-textarea{width: 100%;min-height: 80px;padding: 12px;border: none;border-radius: 10px;background: #FFF8F0;font-size: 14px;box-sizing: border-box;}
+.upload-grid{display: flex;flex-wrap: wrap;gap: 8px;margin-bottom: 8px;}
+.upload-item{position: relative;width: 80px;height: 80px;}
+.upload-img{width: 80px;height: 80px;border-radius: 8px;}
+.upload-del{position: absolute;top: -6px;right: -6px;width: 20px;height: 20px;line-height: 20px;text-align: center;border-radius: 50%;background: #FF6B6B;color: #fff;font-size: 12px;}
+.upload-btn{width: 100%;min-height: 48px;line-height: 48px;text-align: center;border: 1.5px dashed #e8e0d8;border-radius: 12px;background: #fff;font-size: 14px;color: #7a7a9a;padding: 0 12px;white-space: normal;word-break: break-all;}
+.empty-note{font-size: 13px;color: #999;padding: 12px 0;text-align: center;}
+
+/* 孩子列表加载失败内联错误态 */
+.error-inline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 8px;
+  gap: 8px;
+}
+.error-inline .error-icon { font-size: 24px; }
+.error-inline .error-text { font-size: 12px; color: #D32F2F; text-align: center; }
+.btn-retry-inline {
+  padding: 6px 16px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 15px;
+  border: none;
+}
+.btn-retry-inline::after { border: none; }
+
+/* ===== 温和缴费提示条（无生效套餐时显示 · 暖橙淡底 · 小字 · 圆角 · 不遮挡内容）===== */
+.plan-tip { display: flex; align-items: center; gap: 5px; margin: 10px 16px 0; padding: 8px 12px; background: #FFF4E5; border: 0.5px solid #FFE0B2; border-radius: 8px; }
+.plan-tip-icon { font-size: 13px; flex-shrink: 0; }
+.plan-tip-text { flex: 1; font-size: 12px; color: #B26A00; line-height: 1.4; }
+.plan-tip-arrow { font-size: 14px; color: #E8873A; flex-shrink: 0; }
+/* 修复：最近作业-提交这份入口 */
+.hw-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.hw-submit-btn {
+  font-size: 11px;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #FFB347, #FF8C42);
+  padding: 4px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+/* 批2：套餐未生效的缴费引导空态 */
+.plan-empty{color:#B26A00;background:#FFF4E5;border:0.5px solid #FFE0B2;border-radius:8px;padding:12px;margin:10px 12px;}
+
+/* 修改/删除已布置作业 */
+.edit-banner{display:flex;align-items:center;justify-content:space-between;margin:10px 16px 0;padding:8px 12px;background:#FFF4E5;border:0.5px solid #FFE0B2;border-radius:8px;}
+.edit-banner-text{font-size:12px;color:#B26A00;flex:1;}
+.edit-banner-cancel{font-size:12px;color:#0984E3;font-weight:600;padding-left:8px;flex-shrink:0;}
+.hw-edit-row{display:flex;gap:6px;margin-top:7px;}
+.hw-edit-btn{font-size:11px;color:#0984E3;background:#F0F4FF;padding:4px 10px;border-radius:10px;white-space:nowrap;}
+.hw-edit-btn.danger{color:#D63031;background:#FFECEB;}
+
+.hw-subject-tags{display:inline-flex;flex-wrap:wrap;gap:4px;vertical-align:middle;margin:1px 0;}
+.hw-tag{font-size:10px;line-height:1.5;padding:1px 6px;border-radius:5px;background:#FFF3E8;color:#E67E22;font-weight:600;}
+.hw-tag.all{background:#E8F5E9;color:#2E7D32;}
+
+/* ===== 星级打分（P0 v1.1） ===== */
+.rate-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:6px}
+.rate-stars{display:flex;gap:3px}
+.rate-star{font-size:20px;color:#d1d5db;line-height:1;padding:2px 3px}
+.rate-star.on{color:#f59e0b}
+.rate-hint{font-size:11px;color:#9ca3af}
+.rate-done{font-size:11px;color:#0f766e}
+
+/* ====== evaluation 页样式（rpx→px）====== */
+/* 瀹堕暱璇勪环鏌ョ湅鏍峰紡 */
+.page { min-height: 100vh; background: #FFF8F0; padding-bottom: 15px;   padding-bottom: 70px;}
+
+/* 瀛╁瓙鍒囨崲鍣�锛堢粺涓�椋庢牸锛?*/
+.switcher-bar { padding: 8px 12px 0; }
+.switcher-scroll { white-space: nowrap; padding: 2px 0; }
+.switcher-chip {
+  display: inline-flex; align-items: center;
+  padding: 5px 14px; margin-right: 6px;
+  border-radius: 20px; background: #fff;
+  border: 1px solid #E0E0E0;
+  font-size: 13px; color: #666;
+}
+.switcher-chip.active {
+  border-color: #FF8C42; background: #EEF5FF;
+  color: #FF8C42; font-weight: 600;
+}
+
+/* 缁熻�� */
+.eval-stat { display: flex; background: #fff; padding: 10px; margin: 0 10px; border-radius: 8px; margin-top: 8px; }
+.eval-stat-item { flex: 1; text-align: center; }
+.eval-stat-num { font-size: 18px; font-weight: bold; color: #2D2D2D; display: block; }
+.eval-stat-num.good { color: #52c41a; }
+.eval-stat-num.improvement { color: #fa8c16; }
+.eval-stat-label { font-size: 11px; color: #999; display: block; margin-top: 2px; }
+
+/* 绛涢�?*/
+.filter-bar { display: flex; gap: 8px; padding: 8px 10px; }
+.filter-tab { padding: 4px 14px; background: #f5f5f5; border-radius: 15px; font-size: 13px; color: #666; }
+.filter-tab.active { background: #e6f0ff; color: #FF8C42; font-weight: 500; }
+
+/* 璇勪环鍗＄墖 */
+.eval-list { padding: 0 10px; }
+.eval-card { background: #fff; border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+
+.eval-header { display: flex; align-items: center; margin-bottom: 8px; }
+.eval-avatar { width: 30px; height: 30px; border-radius: 50%; }
+.eval-header-info { flex: 1; margin-left: 8px; }
+.eval-teacher { font-size: 14px; color: #2D2D2D; font-weight: 500; display: block; }
+.eval-date { font-size: 11px; color: #999; display: block; margin-top: 2px; }
+.eval-child { font-size: 11px; color: #B26A00; display: block; margin-top: 2px; }
+.eval-type-badge { padding: 2px 8px; border-radius: 8px; font-size: 10px; }
+.eval-type-badge.daily { background: #e6ffed; color: #52c41a; }
+.eval-type-badge.period { background: #fff7e6; color: #fa8c16; }
+.eval-type-badge.points { background: #f0e8ff; color: #7c52ff; }
+.eval-type-badge.boss { background: #fff1f0; color: #d4380d; }
+
+.eval-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.eval-tag { padding: 2px 8px; background: #f0f7ff; border-radius: 8px; font-size: 11px; color: #FF8C42; }
+
+.eval-body { margin-bottom: 6px; }
+.eval-content { font-size: 13px; color: #555; line-height: 1.6; }
+
+.eval-footer { border-top: 0.5px solid #f5f5f5; padding-top: 6px; }
+.eval-points { font-size: 12px; color: #fa8c16; }
+
+.empty-tip { text-align: center; padding: 50px 0; color: #ccc; font-size: 14px; }
+
+.load-more { text-align: center; padding: 12px 0; }
+.load-more text { font-size: 12px; color: #999; }
+
+.eval-imgs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.eval-img-item { width: 75px; height: 75px; border-radius: 5px; }
+
+/* ===== 温和缴费提示条（无生效套餐时显示 · 暖橙淡底 · 小字 · 圆角 · 不遮挡内容）===== */
+.plan-tip { display: flex; align-items: center; gap: 5px; margin: 8px 10px 0; padding: 8px 12px; background: #FFF4E5; border: 0.5px solid #FFE0B2; border-radius: 8px; }
+.plan-tip-icon { font-size: 13px; flex-shrink: 0; }
+.plan-tip-text { flex: 1; font-size: 12px; color: #B26A00; line-height: 1.4; }
+.plan-tip-arrow { font-size: 14px; color: #E8873A; flex-shrink: 0; }
+
+/* ====== payment 页样式（rpx→px）====== */
+/* 缴费 v3.0 - Impeccable 重新设计 */
+
+.warm-page {
+  min-height: 100vh; background: #FFF8F0;
+  font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+  color: #1A1A2E; padding-bottom: 70px;
+}
+.warm-head {
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  padding: 48px 20px 28px; border-radius: 0 0 28px 28px;
+  color: #FFFFFF; position: relative; overflow: hidden;
+}
+.warm-head::before {
+  content: ''; position: absolute;
+  top: -60px; right: -40px;
+  width: 240px; height: 240px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+.head-title { font-size: 20px; font-weight: 700; position: relative; }
+.head-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; position: relative; }
+
+.section { padding: 20px 16px 0; }
+.sec-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+
+.plan-card {
+  background: #FFFFFF; border-radius: 16px; padding: 18px;
+  margin-bottom: 12px; box-shadow: 0 2px 12px rgba(255,140,66,0.10);
+}
+.plan-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.plan-icon { font-size: 28px; }
+.plan-info { flex: 1; }
+.plan-name { font-size: 16px; font-weight: 700; display: block; }
+.plan-desc { font-size: 12px; color: #7A7A9A; display: block; margin-top: 2px; }
+.plan-status { font-size: 11px; color: #4ECDC4; font-weight: 600; display: block; }
+.plan-price { font-size: 22px; font-weight: 800; color: #FF8C42; }
+.plan-meta { font-size: 12px; color: #7A7A9A; line-height: 1.8; }
+
+.plan-option { border: 1.5px solid #E8E0D8; }
+.buy-btn {
+  width: 100%; height: 40px; line-height: 40px; text-align: center;
+  margin-top: 10px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #FFFFFF; font-size: 14px; font-weight: 600;
+  box-shadow: 0 2px 8px rgba(255,140,66,0.25);
+}
+
+.history-list { }
+.history-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #FFFFFF; border-radius: 12px; padding: 12px;
+  margin-bottom: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.history-left { display: flex; align-items: center; gap: 10px; }
+.history-icon { font-size: 18px; }
+.history-info { }
+.history-desc { font-size: 13px; font-weight: 500; display: block; }
+.history-date { font-size: 11px; color: #B0A8A0; display: block; }
+.history-status { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+.history-status.paid { background: #E8F8E8; color: #27AE60; }
+.history-status.pending { background: #FFF0E0; color: #E67E22; }
+
+.empty-text { text-align: center; padding: 30px 0; font-size: 14px; color: #B0A8A0; }
+
+.chip-strip { padding: 14px 16px 0; }
+.chip-scroll { white-space: nowrap; }
+.chip {
+  display: inline-flex; padding: 8px 16px; margin-right: 8px;
+  border-radius: 20px; background: #FFFFFF; font-size: 14px; font-weight: 500;
+  border: 1.5px solid #E8E0D8;
+}
+.chip.on { background: #FF8C42; color: #fff; border-color: #FF8C42; box-shadow: 0 2px 8px rgba(255,140,66,0.25); }
+
+/* ===== 支付确认/支付中弹窗（模拟支付闭环） ===== */
+.pay-mask {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45); z-index: 1000;
+}
+.pay-modal {
+  position: fixed; left: 16px; right: 16px; bottom: 30px;
+  z-index: 1001; background: #FFFFFF; border-radius: 12px;
+  padding: 18px 16px 16px;
+  display: flex; flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+.pay-title { font-size: 17px; font-weight: 700; text-align: center; color: #1A1A2E; }
+.pay-sub { font-size: 12px; color: #7A7A9A; text-align: center; margin-top: 4px; }
+.pay-info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 4px; border-bottom: 0.5px solid #F4EEE6;
+}
+.pay-info-label { font-size: 13px; color: #7A7A9A; }
+.pay-info-value {
+  font-size: 13px; font-weight: 600; color: #1A1A2E;
+  max-width: 70%; text-align: right;
+}
+.pay-amount {
+  text-align: center; font-size: 28px; font-weight: 800; color: #FF8C42;
+  padding: 14px 0 4px;
+}
+.pay-countdown {
+  text-align: center; font-size: 12px; color: #E67E22;
+  margin: 4px 0 12px; font-weight: 600;
+}
+.pay-spinner {
+  width: 32px; height: 32px; margin: 0 auto 10px;
+  border: 3px solid #FFE0C7; border-top-color: #FF8C42;
+  border-radius: 50%;
+  animation: pay-spin 0.8s linear infinite;
+}
+@keyframes pay-spin { to { transform: rotate(360deg); } }
+.pay-btn-row {
+  display: flex; gap: 10px; margin-top: 16px;
+}
+.pay-btn {
+  flex: 1; height: 44px; line-height: 44px; text-align: center;
+  border-radius: 8px; font-size: 15px; font-weight: 600;
+  padding: 0; margin: 0;
+}
+.pay-btn::after { border: none; }
+.pay-btn.primary {
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #FFFFFF; box-shadow: 0 2px 8px rgba(255,140,66,0.3);
+}
+.pay-btn.ghost {
+  background: #FFFFFF; color: #7A7A9A; border: 1px solid #E0D8D0;
+}
+
+/* ===== 减免券选择 ===== */
+.pay-coupon-section { margin: 10px 0; }
+.pay-coupon-title { font-size: 13px; color: #666; margin-bottom: 6px; display: block; }
+.pay-coupon-list { max-height: 110px; }
+.pay-coupon-item { display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: #FFF8F0; border: 0.5px solid #F0E0CF; border-radius: 6px; margin-bottom: 5px; }
+.pay-coupon-item.on { border-color: #FF8C42; background: #FFF1E6; }
+.pay-coupon-amount { font-size: 14px; font-weight: 700; color: #E86A17; }
+.pay-coupon-reason { flex: 1; font-size: 12px; color: #888; }
+.pay-coupon-check { font-size: 14px; color: #FF8C42; font-weight: 700; }
+.pay-coupon-total { font-size: 13px; color: #666; margin-top: 4px; }
+.pay-coupon-discount { color: #E86A17; font-weight: 700; font-size: 15px; }
+
+.plan-status.pending { color: #FA8C16; }
+.plan-status.active { color: #00b894; }
+.plan-status.prepaid { color: #0984e3; }
+.plan-status.rejected { color: #d63031; }
+.plan-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+.plan-tag { background: #fff7e6; color: #d63031; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+.plan-card.prepaid { border: 1px dashed #0984e3; }
+.pay-transfer-tip { background: #fff7e6; border: 0.5px solid #ffeaa7; border-radius: 5px; padding: 6px; margin: 5px 0; font-size: 12px; color: #d63031; }
+.pay-ok-icon { font-size: 30px; text-align: center; margin: 5px 0; }
+
+/* ===== 当前套餐 Hero 卡 ===== */
+.plan-hero {
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  border-radius: 10px;
+  padding: 14px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.plan-hero::after {
+  content: '📚';
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  font-size: 70px;
+  opacity: 0.15;
+}
+.hero-top { display: flex; justify-content: space-between; align-items: center; }
+.hero-name { font-size: 16px; font-weight: bold; }
+.hero-status { font-size: 11px; background: rgba(255,255,255,.25); padding: 3px 9px; border-radius: 12px; }
+.hero-status.pending { background: rgba(255,255,255,.25); }
+.hero-price { font-size: 24px; font-weight: 800; margin-top: 8px; }
+.hero-unit { font-size: 11px; font-weight: 400; opacity: .85; }
+.hero-period { font-size: 11px; opacity: .92; margin-top: 5px; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.hero-tag { background: rgba(255,255,255,.22); padding: 3px 9px; border-radius: 10px; font-size: 11px; }
+/* 套餐详情（内容快照列表） */
+.hero-detail { margin-top: 9px; padding-top: 7px; border-top: 0.5px dashed rgba(255,255,255,.35); }
+.hero-detail-title { display: block; font-size: 11px; font-weight: 600; opacity: .95; margin-bottom: 4px; }
+.hero-detail-item { display: block; font-size: 11px; line-height: 1.7; opacity: .9; }
+/* 数据统计 */
+.plan-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-top: 8px; }
+.plan-stat { background: #fff; border-radius: 7px; padding: 9px 4px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+.stat-v { font-size: 13px; font-weight: 800; color: #2d3436; }
+.stat-l { font-size: 10px; color: #b2bec3; margin-top: 2px; }
+/* 提前缴费卡 */
+.plan-prepaid { margin-top: 8px; background: #f0f6ff; border: 1px dashed #0984e3; border-radius: 8px; padding: 10px; }
+.prepaid-row { display: flex; justify-content: space-between; align-items: center; }
+.prepaid-name { font-size: 14px; font-weight: bold; color: #0984e3; }
+.prepaid-status { font-size: 11px; color: #0984e3; background: rgba(9,132,227,.1); padding: 2px 7px; border-radius: 10px; }
+.prepaid-meta { font-size: 11px; color: #636e72; margin-top: 4px; }
+/* Slogan 家校共育 */
+.slogan-box { margin-top: 10px; background: #fff; border: 1px dashed #FF8C42; border-radius: 8px; padding: 12px; text-align: center; }
+.slogan-title { font-size: 14px; font-weight: bold; color: #FF8C42; display: block; }
+.slogan-formula { font-size: 13px; color: #2d3436; margin-top: 5px; display: block; }
+.slogan-num { font-size: 15px; font-weight: 800; color: #FF8C42; }
+.slogan-sub { font-size: 11px; color: #b2bec3; margin-top: 4px; display: block; }
+
+.history-status.active { background: #E8F8E8; color: #27AE60; }
+.history-status.pending { background: #FFF0E0; color: #E67E22; }
+.history-status.prepaid { background: #E8F0FF; color: #2B7EE8; }
+.history-status.rejected { background: #FFE8E8; color: #E74C3C; }
+
+/* 待享受额度 */
+.ready-section { margin-top: 10px; }
+.ready-title { font-size: 13px; color: #636e72; display: block; margin-bottom: 6px; }
+.ready-card { background: #f0f6ff; border: 1px dashed #0984e3; border-radius: 8px; padding: 10px; margin-bottom: 7px; }
+.ready-row { display: flex; justify-content: space-between; align-items: center; }
+.ready-name { font-size: 14px; font-weight: bold; color: #0984e3; }
+.ready-price { font-size: 14px; color: #d63031; font-weight: bold; }
+.ready-meta { font-size: 11px; color: #636e72; margin-top: 4px; }
+.ready-btn { margin-top: 7px; background: #0984e3; color: #fff; text-align: center; padding: 7px 0; border-radius: 6px; font-size: 14px; font-weight: bold; }
+/* 已到期 */
+.expired-box { margin-top: 10px; background: #fff1f0; border: 1px solid #ffa39e; border-radius: 8px; padding: 10px; text-align: center; }
+.expired-text { font-size: 13px; color: #d63031; display: block; }
+.expired-btn { margin-top: 7px; background: #d63031; color: #fff; padding: 7px 0; border-radius: 6px; font-size: 14px; }
+/* 状态色 */
+.hero-status.ready { background: #dfe6e9; color: #0984e3; }
+.hero-status.expired { background: #b2bec3; color: #fff; }
+.history-status.ready { background: #E8F0FF; color: #2B7EE8; }
+.history-status.expired { background: #F0F0F0; color: #636e72; }
+
+/* 游客（未登录）套餐展示与登录引导 */
+.guest-tip { margin-top: 12px; padding: 12px; background: #FFF6EC; border: 1px solid #F5E3D0; border-radius: 8px; text-align: center; }
+.guest-tip-text { display: block; font-size: 13px; color: #8A6A4A; margin-bottom: 10px; line-height: 1.6; }
+.guest-tip-btn { background: #FF8C42; color: #fff; font-size: 14px; font-weight: 600; border-radius: 20px; line-height: 2.4; }
+.guest-tip-btn::after { border: none; }
+
+/* ====== announcement 页样式（rpx→px）====== */
+.page { min-height: 100vh; background: #FFF8F0; padding: 12px; }
+
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.page-title { font-size: 18px; font-weight: 700; color: #2D2D2D; }
+
+.loading-state { text-align: center; padding: 60px 0; }
+.loading-text { font-size: 13px; color: #999; }
+
+.card {
+  background: #fff; border-radius: 10px; padding: 12px;
+  margin-bottom: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.card:active { opacity: 0.8; }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.card-type {
+  font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+}
+.type-policy { background: #FFF3E0; color: #E65100; }
+.type-safety { background: #FCE4EC; color: #C62828; }
+.type-general { background: #E3F2FD; color: #1565C0; }
+.status-badge {
+  font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+}
+.status-badge.unread { background: #FFF3E0; color: #FF8C42; }
+.status-badge.read { background: #E8F5E9; color: #43A047; }
+.card-title { font-size: 15px; font-weight: 700; color: #2D2D2D; display: block; margin-bottom: 4px; }
+.card-desc {
+  font-size: 13px; color: #666; display: block; line-height: 1.5;
+  overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 6px; border-top: 1px solid #F0F0F0; }
+.card-time { font-size: 11px; color: #999; }
+.sign-required { font-size: 12px; color: #FF8C42; font-weight: 600; }
+.sign-done { font-size: 12px; color: #43A047; }
+
+.empty-state { text-align: center; padding: 60px 0; }
+.empty-icon { font-size: 40px; display: block; margin-bottom: 8px; }
+.empty-text { font-size: 13px; color: #CCC; }
+
+/* 详情视图 */
+.detail-view { padding-bottom: 60px; }
+.detail-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.back-btn { font-size: 14px; color: #FF8C42; font-weight: 600; padding: 4px; }
+.detail-type { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.detail-title { font-size: 18px; font-weight: 700; color: #2D2D2D; display: block; margin-bottom: 10px; }
+.detail-content { font-size: 14px; color: #444; line-height: 1.8; display: block; white-space: pre-wrap; margin-bottom: 20px; }
+
+.status-card {
+  background: #E8F5E9; border-radius: 8px; padding: 14px;
+  text-align: center; margin-bottom: 12px;
+}
+.status-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+.status-text { font-size: 14px; color: #2E7D32; font-weight: 600; display: block; }
+.status-time { font-size: 12px; color: #66BB6A; display: block; margin-top: 4px; }
+
+.sign-section { margin-top: 10px; }
+.sign-notice {
+  background: #FFF3E0; border-radius: 8px; padding: 12px;
+  display: flex; gap: 6px; align-items: flex-start; margin-bottom: 12px;
+}
+.sign-warn-icon { font-size: 16px; flex-shrink: 0; }
+.sign-warn-text { font-size: 13px; color: #E65100; line-height: 1.6; }
+.btn-sign {
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #fff; font-size: 16px; font-weight: 700;
+  padding: 12px; border-radius: 24px; border: none; width: 80%;
+  margin: 0 auto;
+}
+.btn-sign:active { opacity: 0.8; }
+.btn-sign[disabled] { opacity: 0.5; }
+
+/* ====== community 页样式（rpx→px）====== */
+/* 家长社区 v4.0 - 三端统一设计 */
+
+.warm-page {
+  min-height: 100vh;
+  background: #FFF8F0;
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
+  color: #2D2D2D;
+  box-sizing: border-box;
+  padding-bottom: 70px;
+}
+
+/* ===== 页面头 ===== */
+.warm-head {
+  background: linear-gradient(135deg, #FF8C42 0%, #FFB347 100%);
+  padding: 16px 12px 24px;
+  border-radius: 0 0 20px 20px;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+}
+.warm-head::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -20px;
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.warm-head::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: -30px;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.head-title { font-size: 18px; font-weight: 700; display: block; position: relative; }
+.head-sub { font-size: 12px; opacity: 0.85; margin-top: 4px; display: block; position: relative; }
+
+/* ===== 活动 Banner ===== */
+.banner-wrap {
+  margin: -12px 12px 0;
+  height: 140px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(255, 140, 66, 0.18);
+  position: relative;
+  z-index: 2;
+}
+.banner-swp { height: 100%; }
+.banner-slide { position: relative; width: 100%; height: 100%; }
+.banner-img { width: 100%; height: 100%; }
+.banner-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20px 10px 8px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+}
+.banner-tag {
+  display: inline-block;
+  font-size: 10px;
+  color: #FFFFFF;
+  background: #FF8C42;
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+.banner-title { font-size: 15px; font-weight: 700; color: #FFFFFF; display: block; margin-top: 4px; }
+
+/* ===== 分类 Chip ===== */
+.chip-strip { margin: 12px 12px 0; }
+.chip-scroll { white-space: nowrap; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  margin-right: 8px;
+  border-radius: 20px;
+  background: #FFFFFF;
+  border: 1px solid #F0EAE4;
+  color: #8C8C8C;
+  font-size: 13px;
+  font-weight: 500;
+}
+.chip.on {
+  background: #FF8C42;
+  border-color: #FF8C42;
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(255, 140, 66, 0.25);
+}
+
+/* ===== Feed 卡片 ===== */
+.feed-list { padding: 12px 12px 0; }
+.feed-card {
+  background: #FFFFFF;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 8px rgba(255, 140, 66, 0.08);
+}
+.feed-head { display: flex; align-items: center; margin-bottom: 8px; }
+.feed-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #FFF0E0;
+  flex-shrink: 0;
+}
+.feed-info { flex: 1; margin-left: 8px; min-width: 0; }
+.feed-author { font-size: 14px; font-weight: 600; color: #2D2D2D; display: block; }
+.feed-meta { display: flex; align-items: center; margin-top: 3px; }
+.feed-time { font-size: 11px; color: #8C8C8C; }
+.feed-tag {
+  font-size: 10px;
+  color: #17A99F;
+  background: #E6F7F5;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 6px;
+}
+.feed-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2D2D2D;
+  display: block;
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+.feed-images { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 8px; }
+.feed-img { width: 100%; height: 100px; border-radius: 6px; }
+.feed-img.single { height: 160px; border-radius: 8px; }
+.feed-foot {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-top: 8px;
+  border-top: 1px solid #F7F3EF;
+}
+.feed-action { display: flex; align-items: center; }
+.action-emoji { font-size: 14px; }
+.action-num { font-size: 12px; color: #8C8C8C; margin-left: 4px; }
+.feed-action.liked .action-num { color: #FF6B6B; }
+.feed-action.report { margin-left: auto; }
+.report-text { font-size: 11px; color: #C0C0C0; font-weight: 400; }
+.comment-report { font-size: 11px; color: #C0C0C0; margin-left: 8px; flex-shrink: 0; }
+.compliance-tip { text-align: center; font-size: 11px; color: #b2bec3; padding: 12px 16px 20px; line-height: 1.5; }
+
+/* ===== 评论输入 ===== */
+.comment-box {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #F0EAE4;
+}
+.comment-input {
+  flex: 1;
+  height: 32px;
+  line-height: 32px;
+  background: #FFF8F0;
+  border-radius: 16px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #2D2D2D;
+}
+.comment-send { font-size: 14px; font-weight: 600; color: #FF8C42; padding: 0 4px; }
+
+/* ===== 空状态 ===== */
+.empty-card {
+  background: #FFFFFF;
+  border-radius: 8px;
+  margin: 12px;
+  padding: 40px 16px;
+  text-align: center;
+  box-shadow: 0 1px 8px rgba(255, 140, 66, 0.08);
+}
+.empty-emoji { font-size: 40px; display: block; }
+.empty-title { font-size: 14px; font-weight: 600; color: #2D2D2D; display: block; margin-top: 10px; }
+.empty-sub { font-size: 12px; color: #8C8C8C; display: block; margin-top: 4px; }
+
+.comment-list { max-height: 150px; overflow-y: auto; margin-bottom: 6px; }
+.comment-item { display: flex; font-size: 12px; padding: 3px 0; color: #2d3436; }
+.comment-author { color: #0984e3; font-weight: bold; flex-shrink: 0; }
+.comment-content { flex: 1; word-break: break-all; }
+.comment-empty { font-size: 12px; color: #b2bec3; padding: 5px 0; }
+
+/* ===== 未登录：社区内容预览 ===== */
+.preview-intro {
+  margin: 12px 12px 0;
+  padding: 10px 12px;
+  background: #FFF0E0;
+  color: #C4703A;
+  font-size: 13px;
+  line-height: 1.6;
+  border-radius: 8px;
+}
+.preview-list { padding: 12px 12px 0; }
+.preview-card {
+  background: #FFFFFF;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 8px rgba(255, 140, 66, 0.08);
+}
+.preview-head { display: flex; align-items: center; margin-bottom: 8px; }
+.preview-icon { font-size: 18px; }
+.preview-name { font-size: 14px; font-weight: 600; color: #2D2D2D; margin-left: 6px; }
+.preview-meta { font-size: 11px; color: #8C8C8C; margin-left: auto; }
+.preview-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2D2D2D;
+  display: block;
+  word-break: break-all;
+}
+.preview-img {
+  margin-top: 8px;
+  height: 120px;
+  border-radius: 8px;
+  background: #FFF8F0;
+  border: 1px dashed #FFC98A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-img-text { font-size: 12px; color: #C4703A; }
+.preview-login-btn {
+  margin: 4px 12px 20px;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  background: linear-gradient(135deg, #FF8C42 0%, #FFB347 100%);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 22px;
+  box-shadow: 0 3px 10px rgba(255, 140, 66, 0.25);
+}
+
+/* ===== 视频发布（P0） ===== */
+.pub-video{position:relative;display:flex;align-items:center;gap:6px;padding:9px 35px 9px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;margin-top:8px}
+.pub-video-icon{font-size:14px}
+.pub-video-text{font-size:13px;color:#374151}
+.pub-video-progress{font-size:12px;color:#0f766e;font-weight:600}
+.pub-video-remove{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:20px;color:#9ca3af;padding:2px 8px}
+.pub-video-add{display:flex;align-items:center;justify-content:center;padding:8px;margin-top:8px;border:1px dashed #94a3b8;border-radius:7px;color:#475569;font-size:13px;background:#f8fafc}
+/* ===== 视频帖浏览（P1） ===== */
+.feed-video{position:relative;margin-top:8px;border-radius:8px;overflow:hidden;background:#0f172a}
+.feed-video-player{width:100%;height:210px}
+.feed-video-cover{height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e293b,#0f172a)}
+.feed-video-play{width:48px;height:48px;line-height:48px;text-align:center;border-radius:50%;background:rgba(255,255,255,.92);color:#0f172a;font-size:20px}
+.feed-video-dur{margin-top:7px;color:#e2e8f0;font-size:12px}
+
+/* ====== invite 页样式（rpx→px）====== */
+/* 家长端 · 推荐有礼 v1（WP3） — 暖橙风格 */
+.warm-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FF8C42 0%, #FFB347 28%, #FFF8F0 28%);
+  padding: 0 20px 20px;
+}
+
+/* ===== 邀请主卡 ===== */
+.invite-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 28px 20px 20px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(255, 140, 66, 0.25);
+}
+.invite-emoji { font-size: 40px; display: block; }
+.invite-title { display: block; margin-top: 8px; font-size: 20px; font-weight: 700; color: #1A1A2E; }
+.invite-sub { display: block; margin-top: 6px; font-size: 13px; color: #7A7A9A; }
+
+.reward-row {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+.reward-cell {
+  flex: 1;
+  background: linear-gradient(135deg, #FFF3E8, #FFE8D0);
+  border-radius: 12px;
+  padding: 14px 8px;
+}
+.reward-val { display: block; font-size: 28px; font-weight: 800; color: #FF8C42; }
+.reward-lbl { display: block; margin-top: 4px; font-size: 12px; color: #7A7A9A; }
+
+.btn-share {
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 24px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(255, 140, 66, 0.35);
+  transition: transform 0.15s, opacity 0.15s;
+}
+.btn-share::after { border: none; }
+.btn-share:active { transform: scale(0.98); opacity: 0.9; }
+.copy-link {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #FF8C42;
+  text-decoration: underline;
+}
+
+/* ===== 记录卡 ===== */
+.record-card {
+  margin-top: 16px;
+  background: #FFFFFF;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(255, 140, 66, 0.08);
+}
+.record-title { font-size: 15px; font-weight: 700; color: #1A1A2E; display: block; margin-bottom: 10px; }
+.record-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #F5F0EB;
+}
+.record-row:last-of-type { border-bottom: none; }
+.record-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.record-name { font-size: 14px; font-weight: 600; color: #1A1A2E; }
+.record-time { font-size: 11px; color: #7A7A9A; }
+.record-status {
+  flex-shrink: 0;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 14px;
+}
+.record-status.ok { background: #E8F8F6; color: #1FA998; }
+.record-status.revoked { background: #F0ECE8; color: #7A7A9A; }
+
+/* ===== 通用 ===== */
+.empty-text {
+  text-align: center;
+  font-size: 12px;
+  color: #B0A8A0;
+  padding: 16px 0;
+}
+.tip-note {
+  margin-top: 16px;
+  font-size: 11px;
+  color: #B0A8A0;
+  line-height: 1.8;
+  text-align: center;
+}
+.load-fail {
+  padding: 80px 20px;
+  text-align: center;
+}
+.lf-icon { font-size: 30px; display: block; }
+.lf-text { display: block; margin-top: 10px; font-size: 13px; color: #7A7A9A; }
+.lf-btn {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 24px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #FFB347, #FF8C42);
+  color: #FFFFFF;
+  font-size: 13px;
+}
+
+/* ====== students 页样式（rpx→px）====== */
+/* 我的孩子 v3.0 - Impeccable 重新设计 */
+
+.warm-page {
+  min-height: 100vh; background: #FFF8F0;
+  font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+  color: #1A1A2E; padding-bottom: 70px;
+}
+.warm-head {
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  padding: 48px 20px 28px; border-radius: 0 0 28px 28px;
+  color: #FFFFFF; position: relative; overflow: hidden;
+}
+.warm-head::before {
+  content: ''; position: absolute;
+  top: -60px; right: -40px;
+  width: 240px; height: 240px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.head-title { font-size: 20px; font-weight: 700; position: relative; }
+.head-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; position: relative; }
+
+.child-list { padding: 16px; }
+.child-card {
+  background: #FFFFFF; border-radius: 16px; padding: 18px;
+  margin-bottom: 12px; box-shadow: 0 2px 12px rgba(255,140,66,0.10);
+}
+.child-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.child-avatar {
+  width: 48px; height: 48px; line-height: 48px; text-align: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #FFFFFF; font-size: 20px; font-weight: 700;
+  flex-shrink: 0; box-shadow: 0 2px 8px rgba(255,140,66,0.25);
+}
+.child-info { flex: 1; }
+.child-name { font-size: 17px; font-weight: 700; display: block; }
+.child-grade { font-size: 12px; color: #7A7A9A; display: block; margin-top: 2px; }
+.child-status { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 8px; }
+.child-status.present { background: #E8F8E8; color: #27AE60; }
+.child-status.absent { background: #F0ECE8; color: #7A7A9A; }
+
+.child-meta { display: flex; gap: 12px; margin-bottom: 12px; }
+.child-meta-item { font-size: 12px; color: #7A7A9A; }
+
+.child-actions { display: flex; gap: 8px; padding-top: 12px; border-top: 1px solid #F0E8E0; }
+.action-btn {
+  font-size: 12px; padding: 6px 12px; border-radius: 8px;
+  background: #FFF3E8; color: #FF8C42; font-weight: 600;
+}
+.action-btn.danger { background: #FFF0F0; color: #FF6B6B; }
+
+.add-area { padding: 0 16px; }
+.btn-outline {
+  width: 100%; height: 48px; line-height: 48px; text-align: center;
+  border-radius: 14px; font-size: 15px; font-weight: 600;
+  border: 1.5px dashed #E8E0D8; color: #7A7A9A; background: #FFFFFF;
+}
+
+.contact-list{padding: 10px 0;}
+.contact-item{display: flex;align-items: center;justify-content: space-between;padding: 12px;border-bottom:1px solid #f0f0f0;}
+.contact-label{font-size: 12px;color: #888;display: block;}
+.contact-name{font-size: 15px;font-weight: 600;}
+.contact-phone{font-size: 14px;color: #FF8C42;font-weight: 600;padding: 8px 14px;border-radius: 8px;background: #FFF8F0;}
+.form-divider{height: 1px;background: #f0f0f0;margin: 16px 0;}
+.form-section-title{font-size: 14px;font-weight: 600;color: #FF8C42;display: block;margin-bottom: 12px;}
+.form-textarea{width: 100%;min-height: 70px;padding: 10px;border: none;border-radius: 10px;background: #FFF8F0;font-size: 14px;box-sizing: border-box;}
+.modal-overlay{position: fixed;top: 0;left: 0;right: 0;bottom: 0;background: rgba(0,0,0,0.4);z-index: 1000;display: flex;align-items: center;justify-content: center;}
+.modal-box{width: 86%;max-height: 80vh;background: #FFF;border-radius: 20px;padding: 20px;display: flex;flex-direction: column;}
+.modal-title{font-size: 16px;font-weight: 700;text-align: center;margin-bottom: 12px;}
+.modal-scroll{flex: 1;overflow-y: auto;max-height: 55vh;margin-bottom: 12px;}
+.modal-actions{display: flex;gap: 10px;padding-top: 12px;border-top:1px solid #f0f0f0;}
+.modal-actions button{flex: 1;height: 44px;line-height: 44px;text-align: center;border: none;border-radius: 12px;font-size: 14px;font-weight: 600;}
+.form-group{margin-bottom: 14px;}
+.form-label{font-size: 13px;font-weight: 600;display: block;margin-bottom: 4px;}
+.form-input{height: 44px;line-height: 44px;padding: 0 12px;border-radius: 10px;background: #FFF8F0;font-size: 14px;width: 100%;box-sizing: border-box;}
+.form-input.picker{color: #333;}
+.face-preview{width: 100px;height: 100px;border-radius: 12px;display: block;margin-bottom: 8px;}
+.face-hint{font-size: 11px;color: #888;display: block;margin-top: 6px;}
+.btn-outline{width: 100%;height: 44px;line-height: 44px;text-align: center;border: 1.5px solid #e0e0e0;border-radius: 12px;background: #fff;font-size: 14px;color: #7A7A9A;}
+/* ====== checkin 页样式（rpx→px）====== */
+/* 家长端签到 v6.0 - Impeccable 重新设计 */
+/* 设计原则: 暖橙主色贯穿 | 无嵌套卡片 | 暖阴影 | 44px 触控区 */
+
+/* ====== 容器 ====== */
+.warm-page {
+  min-height: 100vh;
+  background: #FFF8F0;
+  font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+  color: #1A1A2E;
+  padding: 0 16px 70px;
+  box-sizing: border-box;
+}
+
+/* ====== 区块 ====== */
+.section { margin-top: 20px; }
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.sec-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1A1A2E;
+}
+.sec-meta {
+  font-size: 12px;
+  color: #7A7A9A;
+}
+.sec-actions { display: flex; gap: 8px; align-items: center; }
+.action-btn {
+  font-size: 13px;
+  color: #FF8C42;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #FFF3E8;
+}
+.action-btn.danger { color: #FF6B6B; background: #FFF0F0; }
+
+/* ====== 孩子芯片 ====== */
+.chip-scroll { white-space: nowrap; padding: 4px 0 8px; }
+.chip-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  margin-right: 8px;
+  border-radius: 20px;
+  background: #FFFFFF;
+  border: 1.5px solid #E8E0D8;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1A1A2E;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.chip-tab.on {
+  background: #FF8C42;
+  border-color: #FF8C42;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(255,140,66,0.25);
+}
+.chip-avatar {
+  width: 24px; height: 24px;
+  line-height: 24px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+.chip-tab.on .chip-avatar { background: rgba(255,255,255,0.2); }
+.chip-tab:not(.on) .chip-avatar { background: #FFF3E8; color: #FF8C42; }
+.chip-name { font-weight: 600; }
+.chip-badge { font-size: 11px; opacity: 0.7; }
+.chip-tab.on .chip-badge { opacity: 1; }
+
+/* ====== 签到主卡片 ====== */
+.checkin-card {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 4px 20px rgba(255,140,66,0.12);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.card-avatar {
+  width: 44px; height: 44px;
+  line-height: 44px;
+  text-align: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(255,140,66,0.25);
+}
+.card-info { flex: 1; }
+.card-name { font-size: 16px; font-weight: 700; color: #1A1A2E; display: block; }
+.card-grade { font-size: 12px; color: #7A7A9A; display: block; margin-top: 2px; }
+.card-emoji { font-size: 28px; }
+
+/* ====== 状态选择 ====== */
+.status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.status-cell {
+  text-align: center;
+  padding: 12px 8px;
+  border-radius: 12px;
+  border: 2px solid #E8E0D8;
+  background: #FFFFFF;
+  transition: all 0.15s;
+}
+.status-cell.on {
+  border-color: #FF8C42;
+  background: #FFF3E8;
+  box-shadow: 0 2px 8px rgba(255,140,66,0.12);
+}
+.status-ico { font-size: 24px; display: block; margin-bottom: 4px; }
+.status-lbl { font-size: 13px; font-weight: 600; color: #1A1A2E; }
+.status-cell.on .status-lbl { color: #FF8C42; }
+
+/* ====== 额外输入 ====== */
+.extra-row {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #FFF8F0;
+  border-radius: 12px;
+}
+.extra-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7A7A9A;
+  display: block;
+  margin-bottom: 6px;
+}
+.extra-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.extra-field {
+  flex: 1;
+  height: 40px;
+  border: none;
+  background: #FFFFFF;
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: #1A1A2E;
+}
+.extra-field.full {
+  height: 40px;
+  width: 100%;
+}
+.extra-unit { font-size: 13px; color: #7A7A9A; }
+
+/* ====== 主按钮 ====== */
+.btn-primary {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 0;
+  box-shadow: 0 4px 14px rgba(255,140,66,0.30);
+  transition: transform 0.15s;
+}
+.btn-primary:active { transform: scale(0.97); }
+
+/* ====== 批量签到 ====== */
+.batch-area { text-align: center; margin-top: 14px; }
+.batch-link {
+  font-size: 13px;
+  color: #FF8C42;
+  font-weight: 600;
+  padding: 8px 16px;
+  display: inline-block;
+}
+
+/* ====== 连续签到 ====== */
+.streak-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  margin-top: 16px;
+  background: linear-gradient(135deg, #FFF3E8, #FFF8F0);
+  border-radius: 14px;
+  border: 1px solid #FFE8D0;
+}
+.streak-fire { font-size: 32px; flex-shrink: 0; }
+.streak-info { flex: 1; }
+.streak-num { font-size: 16px; font-weight: 700; color: #FF8C42; display: block; }
+.streak-text { font-size: 12px; color: #7A7A9A; margin-top: 2px; display: block; }
+
+/* ====== 统计 ====== */
+.stat-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.stat-cell {
+  flex: 1;
+  background: #FFFFFF;
+  border-radius: 14px;
+  padding: 16px 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.stat-val {
+  font-size: 28px;
+  font-weight: 700;
+  color: #FF8C42;
+  display: block;
+}
+.stat-val.muted { color: #7A7A9A; }
+.stat-lbl { font-size: 12px; color: #7A7A9A; margin-top: 4px; display: block; }
+
+/* ====== 历史 ====== */
+.hist-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.hist-cell {
+  text-align: center;
+  padding: 6px 2px;
+  border-radius: 8px;
+  font-size: 10px;
+}
+.hist-cell.status-present { background: #E8F8E8; }
+.hist-cell.status-late { background: #FFF0E0; }
+.hist-cell.status-absent_leave { background: #FFF3E8; color: #FF8C42; }
+.hist-cell.status-absent { background: #F5F0EB; color: #C0B8B0; }
+.hist-day { font-weight: 600; font-size: 12px; display: block; }
+.hist-icon { font-size: 14px; display: block; margin: 2px 0; }
+.hist-date { font-size: 9px; color: #7A7A9A; display: block; }
+
+/* ====== 备注 ====== */
+.note-bubble {
+  background: #FFF9E6;
+  border-radius: 12px;
+  padding: 14px;
+  border-left: 3px solid #FFD93D;
+}
+.note-text { font-size: 13px; color: #1A1A2E; line-height: 1.6; display: block; }
+.note-hint { font-size: 11px; color: #7A7A9A; margin-top: 8px; display: block; }
+
+.note-input-area { margin-top: 8px; }
+.note-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  border: 1.5px solid #E8E0D8;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #1A1A2E;
+  background: #FFFFFF;
+  box-sizing: border-box;
+}
+.note-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: flex-end;
+}
+
+.btn-sm {
+  min-width: 80px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0 16px;
+  background: #F0ECE8;
+  color: #1A1A2E;
+}
+.btn-sm.primary {
+  background: #FF8C42;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(255,140,66,0.25);
+}
+
+.note-empty { text-align: center; padding: 20px 0; }
+.note-empty-text { font-size: 14px; font-weight: 600; color: #7A7A9A; display: block; }
+.note-empty-desc { font-size: 12px; color: #B0A8A0; margin-top: 4px; display: block; }
+
+/* ====== 人脸签到 ====== */
+.face-list { margin-top: 8px; }
+.face-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.face-avatar {
+  width: 36px; height: 36px;
+  line-height: 36px;
+  text-align: center;
+  border-radius: 50%;
+  background: #E8F8F6;
+  color: #4ECDC4;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.face-info { flex: 1; }
+.face-name { font-size: 13px; font-weight: 600; display: block; }
+.face-time { font-size: 11px; color: #7A7A9A; display: block; }
+.face-badge {
+  font-size: 10px;
+  color: #4ECDC4;
+  background: #E8F8F6;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.empty-note {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 13px;
+  color: #B0A8A0;
+}
+
+/* ====== 弹窗 ====== */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.modal-mask.show { opacity: 1; pointer-events: auto; }
+
+.modal {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 1001;
+  background: #FFFFFF;
+  border-radius: 20px 20px 0 0;
+  padding: 24px 20px 40px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+}
+.modal.show { transform: translateY(0); }
+
+.modal-content { display: flex; flex-direction: column; }
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.modal-student {
+  text-align: center;
+  padding: 20px;
+  background: #FFF3E8;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+.modal-sname { font-size: 20px; font-weight: 700; display: block; margin-bottom: 4px; }
+.modal-sstatus { font-size: 14px; color: #7A7A9A; }
+.modal-extra {
+  font-size: 13px;
+  color: #FF8C42;
+  text-align: center;
+  display: block;
+  margin-bottom: 16px;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+.modal-actions .btn-sm { flex: 1; }
+
+/* ===== 温和缴费提示条（无生效套餐时显示 · 暖橙淡底 · 小字 · 圆角 · 不遮挡内容）===== */
+.plan-tip { display: flex; align-items: center; gap: 5px; margin: 10px 0 0; padding: 8px 12px; background: #FFF4E5; border: 0.5px solid #FFE0B2; border-radius: 8px; }
+.plan-tip-icon { font-size: 13px; flex-shrink: 0; }
+.plan-tip-text { flex: 1; font-size: 12px; color: #B26A00; line-height: 1.4; }
+.plan-tip-arrow { font-size: 14px; color: #E8873A; flex-shrink: 0; }
+
+/* ===== 批1：签到来源徽章 ===== */
+.card-source { font-size: 10px; color: #2F6BE0; background: #EAF3FF; border-radius: 4px; padding: 1px 5px; margin-top: 3px; align-self: flex-start; }
+
+/* ====== points 页样式（rpx→px）====== */
+/* 家长积分 v3.0 - Impeccable 重新设计 */
+
+.warm-page {
+  min-height: 100vh; background: #FFF8F0;
+  font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+  color: #1A1A2E; padding-bottom: 70px;
+}
+
+.points-hero {
+  background: linear-gradient(135deg, #FF8C42, #FFB347);
+  padding: 40px 20px 32px;
+  text-align: center; color: #FFFFFF;
+  position: relative; overflow: hidden;
+}
+.points-hero::before {
+  content: ''; position: absolute;
+  top: -60px; right: -40px;
+  width: 240px; height: 240px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+.points-hero-inner { position: relative; }
+.points-hero-label { font-size: 13px; opacity: 0.85; display: block; }
+.points-hero-val { font-size: 56px; font-weight: 800; display: block; margin: 4px 0; line-height: 1; }
+.points-hero-unit { font-size: 16px; opacity: 0.8; }
+
+/* 我的礼金卡片 */
+.coupon-card {
+  margin: 16px 16px 0;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1.5px solid #FFE3CC;
+  box-shadow: 0 2px 8px rgba(255,140,66,0.08);
+}
+.coupon-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.coupon-card-title { font-size: 15px; font-weight: 700; color: #1A1A2E; }
+.coupon-card-balance {
+  font-size: 32px; font-weight: 800; color: #FF8C42;
+  line-height: 1; margin-left: auto;
+}
+.coupon-card-unit { font-size: 12px; color: #B0A8A0; }
+.coupon-records {
+  margin-top: 10px;
+  border-top: 1px solid #F5F0EB;
+}
+.coupon-record {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #FAF6F2;
+}
+.coupon-record:last-child { border-bottom: none; }
+.coupon-record-reason {
+  font-size: 12px; color: #4A4A6A; display: block;
+  max-width: 230px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.coupon-record-time { font-size: 10px; color: #B0A8A0; display: block; margin-top: 2px; }
+.coupon-record-amount { font-size: 15px; font-weight: 700; color: #FF8C42; flex-shrink: 0; }
+.coupon-empty {
+  margin-top: 10px;
+  font-size: 12px; color: #B0A8A0;
+  text-align: center; padding: 10px 0;
+}
+
+.chip-strip { padding: 14px 16px 0; }
+.chip-scroll { white-space: nowrap; }
+.chip {
+  display: inline-flex; padding: 8px 16px; margin-right: 8px;
+  border-radius: 20px; background: #FFFFFF; font-size: 14px; font-weight: 500;
+  border: 1.5px solid #E8E0D8;
+}
+.chip.on { background: #FF8C42; color: #fff; border-color: #FF8C42; box-shadow: 0 2px 8px rgba(255,140,66,0.25); }
+
+.today-points {
+  display: flex; align-items: center; gap: 8px;
+  margin: 14px 16px 0; padding: 12px 16px;
+  background: #FFF9E6; border-radius: 12px;
+  border-left: 3px solid #FFD93D;
+}
+.today-icon { font-size: 20px; }
+.today-text { font-size: 13px; color: #1A1A2E; }
+.today-num { font-weight: 700; color: #FF8C42; }
+
+.family-points {
+  display: flex; align-items: center; gap: 8px;
+  margin: 10px 16px 0; padding: 12px 16px;
+  background: #FFFFFF; border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.family-icon { font-size: 20px; }
+.family-text { font-size: 13px; color: #7A7A9A; }
+.family-num { font-weight: 700; color: #FF8C42; }
+
+.section { padding: 20px 16px 0; }
+.sec-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+
+.history-list { }
+.history-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #FFFFFF; border-radius: 12px; padding: 12px;
+  margin-bottom: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.history-left { display: flex; align-items: center; gap: 10px; }
+.history-icon { font-size: 18px; }
+.history-info { }
+.history-desc { font-size: 13px; font-weight: 500; display: block; }
+.history-date { font-size: 11px; color: #B0A8A0; display: block; }
+.history-amount { font-size: 16px; font-weight: 700; }
+.history-amount.earn { color: #FF8C42; }
+.history-amount.spend { color: #7A7A9A; }
+
+.empty-text { text-align: center; padding: 40px 0; font-size: 14px; color: #B0A8A0; }
+
+/* 积分商城 */
+.reward-scroll { white-space: nowrap; width: 100%; padding-bottom: 4px; }
+.reward-card {
+  display: inline-flex; flex-direction: column;
+  width: 120px; margin-right: 8px;
+  background: #FFFFFF; border-radius: 8px; padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  vertical-align: top;
+}
+.reward-cover {
+  width: 100%; height: 80px;
+  background: #FFF0E3; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.reward-img { width: 100%; height: 100%; }
+.reward-emoji { font-size: 32px; line-height: 1; }
+.reward-name {
+  font-size: 14px; font-weight: 600; margin-top: 6px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.reward-type { font-size: 10px; color: #FF8C42; margin-top: 2px; }
+.reward-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 4px;
+}
+.reward-points { font-size: 13px; font-weight: 700; color: #FF8C42; }
+.reward-stock { font-size: 10px; color: #B0A8A0; }
+.reward-stock.soldout { color: #E05B5B; }
+.reward-btn {
+  margin-top: 6px; height: 28px; line-height: 28px;
+  font-size: 13px; font-weight: 600; color: #FFFFFF;
+  background: #FF8C42; border-radius: 14px; padding: 0;
+  border: none;
+}
+.reward-btn::after { border: none; }
+.reward-btn.disabled { background: #E8E0D8; color: #B0A8A0; }
+
+/* ===== 温和缴费提示条（无生效套餐时显示 · 暖橙淡底 · 小字 · 圆角 · 不遮挡内容）===== */
+.plan-tip { display: flex; align-items: center; gap: 5px; margin: 10px 16px 0; padding: 8px 12px; background: #FFF4E5; border: 0.5px solid #FFE0B2; border-radius: 8px; }
+.plan-tip-icon { font-size: 13px; flex-shrink: 0; }
+.plan-tip-text { flex: 1; font-size: 12px; color: #B26A00; line-height: 1.4; }
+.plan-tip-arrow { font-size: 14px; color: #E8873A; flex-shrink: 0; }
+
+/* ===== 批4：本周积分 / 积分评价 / 兑换订单入口 ===== */
+.points-hero-week { display: block; font-size: 11px; color: #B9AC9E; margin-top: 3px; }
+.sec-head-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.sec-more { font-size: 12px; color: #FF8C42; font-weight: 600; }
+.evalp-list { background: #fff; border-radius: 10px; padding: 4px 12px; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+.evalp-row { padding: 9px 0; border-bottom: 0.5px dashed #F0E8DC; }
+.evalp-row:last-child { border-bottom: none; }
+.evalp-stars { margin-bottom: 3px; }
+.evalp-star-on { color: #FFB020; font-size: 12px; letter-spacing: 1px; }
+.evalp-star-off { color: #E5DED2; font-size: 12px; letter-spacing: 1px; }
+.evalp-content { display: block; font-size: 13px; color: #3D2E20; line-height: 1.55; }
+.evalp-meta { display: block; font-size: 11px; color: #A2937F; margin-top: 3px; }
+.order-link { display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 10px; margin: 16px 16px 0; padding: 13px 14px; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+.order-link-title { font-size: 14px; font-weight: 700; color: #3D2E20; }
+.order-link-sub { font-size: 11.5px; color: #B4531F; }
+
+</style>
+</head>
+<body>
+<div class="stage"><div class="phone">
+
+<div class="screen on" data-screen="cover" id="scr-cover">
+  <div class="cover-bg" style="background-image:url(assets/img_19b30e5cfc.jpg)"></div>
+  <div class="cover-inner">
+    <img class="cover-logo" src="assets/img_706df90991.jpg" alt="LOGO">
+    <div class="cover-kicker">XUEZI XINZHI · 家长学堂</div>
+    <div class="cover-title" onclick="xtOpenMod('intro')">给家长的<br>一封信</div>
+    <div class="cover-sub">8 分钟，带您用好孩子在托辅的每一天</div>
+    <div class="cover-letter mod" data-mod="letter">
+      <div class="cl-ico">💌</div>
+      <div><div class="cl-t">点开这封信，听给您的心里话</div><div class="cl-s">温暖女声 · 7 段朗读</div></div>
+    </div>
+    <div class="cover-enter" onclick="showScreen('home')">进入首页 ›</div>
+  </div>
+</div>
+
+<div class="screen" data-screen="home">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">🏠</span> 首页 · 今日状态</div>
+    <div class="top-badge">第 1 章 / 共 12 章</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar"></div></div>
+  <div class="top-hint">👇 点一点下方带数字的模块，听讲解</div>
+</div>
+<div class="app-screen">
+  <div class="v-head mod" data-mod="head">
+    <div class="mod-hint">1</div>
+    <div class="v-date">11月13日</div>
+    <div class="v-greet">☀️ 上午好</div>
+    <div class="v-name">王妈妈</div>
+  </div>
+
+  <div class="p2-card mod" data-mod="checkin">
+    <div class="mod-hint">2</div>
+    <div class="p2-chips"><div class="p2-chip on">✅ 小明</div><div class="p2-chip">⭕ 小红</div></div>
+    <div class="p2-child">
+      <div class="p2-avatar">明</div>
+      <div class="p2-cinfo"><div class="p2-cname">王小明</div><div class="p2-cgrade">三年级 2班</div></div>
+      <div class="p2-badge">✅ 已签到</div>
+    </div>
+    <div class="p2-status">
+      <div class="p2-cell on"><div class="p2-cico">✅</div><div class="p2-clbl">已到</div></div>
+      <div class="p2-cell"><div class="p2-cico">⏰</div><div class="p2-clbl">迟到</div></div>
+      <div class="p2-cell"><div class="p2-cico">📝</div><div class="p2-clbl">请假</div></div>
+    </div>
+    <div class="p2-btn done">🔄 已签到 · 点击更新</div>
+    <div class="p2-mini">
+      <div class="p2-mstat"><div class="p2-mnum">12天</div><div class="p2-mlbl">🔥 连续签到</div></div>
+      <div class="p2-mstat"><div class="p2-mnum">8</div><div class="p2-mlbl">今日已到</div></div>
+      <div class="p2-mstat"><div class="p2-mnum pink">+156</div><div class="p2-mlbl">我的积分</div></div>
+    </div>
+  </div>
+
+  <div class="p2-banner-wrap mod" data-mod="banner">
+    <div class="mod-hint">3</div>
+    <div class="banner-fallback grad-1">
+      <div class="bf-deco bf-deco-1"></div><div class="bf-deco bf-deco-2"></div>
+      <div class="bf-title">秋季托管火热报名中</div><div class="bf-sub">托辅中心</div>
+    </div>
+  </div>
+
+  <div class="v-sec"><div class="v-sec-t">📢 机构公告</div><div class="v-sec-s">全部 ›</div></div>
+  <div class="p2-notice mod" data-mod="notice">
+    <div class="mod-hint">4</div>
+    <div class="p2-ntag">通知</div>
+    <div class="p2-nbody"><div class="p2-ntitle">本周五亲子活动安排</div><div class="p2-ntext">请家长准时参加，共同见证孩子成长</div></div>
+    <div class="p2-ndate">11-12</div>
+  </div>
+
+  <div class="invite-banner mod" data-mod="invite">
+    <div class="mod-hint">5</div>
+    <div class="ib-glow ib-glow-1"></div><div class="ib-glow ib-glow-2"></div>
+    <div class="ib-left">
+      <div class="ib-title-row"><div class="ib-emoji">🎁</div><div class="ib-title">推荐有礼</div></div>
+      <div class="ib-sub">邀请家长注册，各得 100 积分 + 30 礼金</div>
+    </div>
+    <div class="ib-right"><div class="ib-btn">立即邀请 ›</div></div>
+  </div>
+
+  <div class="v-sec"><div class="v-sec-t">常用功能</div></div>
+  <div class="p2-grid mod" data-mod="functions">
+    <div class="mod-hint">6</div>
+    <div class="p2-tile orange"><div class="p2-tic">📈</div><text>成长报告</text></div>
+    <div class="p2-tile amber"><div class="p2-tic">📝</div><text>作业</text></div>
+    <div class="p2-tile mint"><div class="p2-tic">⭐</div><text>积分</text></div>
+    <div class="p2-tile orange"><div class="p2-tic">💰</div><text>缴费</text></div>
+    <div class="p2-tile amber"><div class="p2-tic">💬</div><text>社区</text></div>
+    <div class="p2-tile mint"><div class="p2-tic">📊</div><text>评价</text></div>
+    <div class="p2-tile orange"><div class="p2-tic">👨‍👩‍👧‍👦</div><text>孩子</text></div>
+    <div class="p2-tile amber"><div class="p2-tic">📢</div><text>公告</text></div>
+  </div>
+
+  <div class="v-sec"><div class="v-sec-t">📊 最近评价</div><div class="v-sec-s">全部 ›</div></div>
+  <div class="p2-eval mod" data-mod="eval">
+    <div class="mod-hint">7</div>
+    <div class="p2-eval-head"><div class="p2-eval-author">李老师 · 小明</div><div class="p2-eval-date">今天</div></div>
+    <div class="p2-eval-body">今天表现很棒，主动帮助同学，作业完成得很认真！</div>
+  </div>
+
+  <div class="v-sec"><div class="v-sec-t">📝 今日备注</div><div class="v-sec-s">添加</div></div>
+  <div class="p2-note-bubble mod" data-mod="note">
+    <div class="mod-hint">8</div>
+    <div class="p2-note-text">今天要早接，下午4点来接孩子，谢谢老师！</div>
+  </div>
+</div>
+</div>
+<div class="screen" data-screen="checkin">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">🧍</span> 孩子签到</div>
+    <div class="top-badge">家长端 · 3/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:20%"></div></div>
+  <div class="top-hint">选孩子 → 选状态 → 一键签到</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">每一次签到，都是家校之间一次无声的击掌：您放心，我们上心。</div><div class="xi-voice" onclick="pvToggle('checkin')">▶ 听讲解 · 孩子签到</div></div>
+<div class="warm-page">
+    <div class="section">
+      <div class="sec-head"><text class="sec-title">选择孩子签到</text></div>
+      <div class="chip-scroll">
+        <div class="chip-tab on"><text class="chip-avatar">明</text><text class="chip-name">王小明</text><text class="chip-badge">✅ 已签到</text></div>
+        <div class="chip-tab"><text class="chip-avatar">红</text><text class="chip-name">王小红</text><text class="chip-badge">⭕ 未签</text></div>
+      </div>
+    </div>
+    <div class="checkin-card">
+      <div class="card-head">
+        <div class="card-avatar">明</div>
+        <div class="card-info">
+          <text class="card-name">王小明</text>
+          <text class="card-grade">三年级 2班</text>
+          <text class="card-source">人脸签到</text>
+        </div>
+        <text class="card-emoji status-present">✅</text>
+      </div>
+      <div class="status-grid">
+        <div class="status-cell on"><text class="status-ico">✅</text><text class="status-lbl">已到</text></div>
+        <div class="status-cell"><text class="status-ico">⏰</text><text class="status-lbl">迟到</text></div>
+        <div class="status-cell"><text class="status-ico">🏠</text><text class="status-lbl">请假</text></div>
+      </div>
+      <div class="btn-primary">更新签到状态</div>
+      <div class="batch-area"><text class="batch-link">一键签到全部 2 个孩子（默认已到）</text></div>
+    </div>
+    <div class="streak-card">
+      <text class="streak-fire">🔥</text>
+      <div class="streak-info">
+        <text class="streak-num">连续签到 12 天</text>
+        <text class="streak-text">坚持就是胜利！继续加油 💪</text>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-cell"><text class="stat-val">8</text><text class="stat-lbl">已到</text></div>
+      <div class="stat-cell"><text class="stat-val muted">1</text><text class="stat-lbl">未签</text></div>
+      <div class="stat-cell"><text class="stat-val">12天</text><text class="stat-lbl">连续</text></div>
+    </div>
+    <div class="section">
+      <div class="sec-head"><text class="sec-title">签到历史（28天）</text><text class="sec-meta">11月</text></div>
+      <div class="hist-grid"><div class="hist-cell status-p"><text class="hist-day">1</text><text class="hist-icon">✅</text><text class="hist-date">11-01</text></div><div class="hist-cell status-p"><text class="hist-day">2</text><text class="hist-icon">✅</text><text class="hist-date">11-02</text></div><div class="hist-cell status-p"><text class="hist-day">3</text><text class="hist-icon">✅</text><text class="hist-date">11-03</text></div><div class="hist-cell status-p"><text class="hist-day">4</text><text class="hist-icon">✅</text><text class="hist-date">11-04</text></div><div class="hist-cell status-p"><text class="hist-day">5</text><text class="hist-icon">✅</text><text class="hist-date">11-05</text></div><div class="hist-cell status-p"><text class="hist-day">6</text><text class="hist-icon">✅</text><text class="hist-date">11-06</text></div><div class="hist-cell status-p"><text class="hist-day">7</text><text class="hist-icon">✅</text><text class="hist-date">11-07</text></div><div class="hist-cell status-p"><text class="hist-day">8</text><text class="hist-icon">✅</text><text class="hist-date">11-08</text></div><div class="hist-cell status-p"><text class="hist-day">9</text><text class="hist-icon">✅</text><text class="hist-date">11-09</text></div><div class="hist-cell status-l"><text class="hist-day">10</text><text class="hist-icon">⏰</text><text class="hist-date">11-10</text></div><div class="hist-cell status-p"><text class="hist-day">11</text><text class="hist-icon">✅</text><text class="hist-date">11-11</text></div><div class="hist-cell status-p"><text class="hist-day">12</text><text class="hist-icon">✅</text><text class="hist-date">11-12</text></div><div class="hist-cell status-p"><text class="hist-day">13</text><text class="hist-icon">✅</text><text class="hist-date">11-13</text></div><div class="hist-cell status-p"><text class="hist-day">14</text><text class="hist-icon">✅</text><text class="hist-date">11-14</text></div><div class="hist-cell status-p"><text class="hist-day">15</text><text class="hist-icon">✅</text><text class="hist-date">11-15</text></div><div class="hist-cell status-p"><text class="hist-day">16</text><text class="hist-icon">✅</text><text class="hist-date">11-16</text></div><div class="hist-cell status-p"><text class="hist-day">17</text><text class="hist-icon">✅</text><text class="hist-date">11-17</text></div><div class="hist-cell status-a"><text class="hist-day">18</text><text class="hist-icon">🏠</text><text class="hist-date">11-18</text></div><div class="hist-cell status-p"><text class="hist-day">19</text><text class="hist-icon">✅</text><text class="hist-date">11-19</text></div><div class="hist-cell status-p"><text class="hist-day">20</text><text class="hist-icon">✅</text><text class="hist-date">11-20</text></div><div class="hist-cell status-p"><text class="hist-day">21</text><text class="hist-icon">✅</text><text class="hist-date">11-21</text></div><div class="hist-cell status-p"><text class="hist-day">22</text><text class="hist-icon">✅</text><text class="hist-date">11-22</text></div><div class="hist-cell status-p"><text class="hist-day">23</text><text class="hist-icon">✅</text><text class="hist-date">11-23</text></div><div class="hist-cell status-l"><text class="hist-day">24</text><text class="hist-icon">⏰</text><text class="hist-date">11-24</text></div><div class="hist-cell status-p"><text class="hist-day">25</text><text class="hist-icon">✅</text><text class="hist-date">11-25</text></div><div class="hist-cell status-p"><text class="hist-day">26</text><text class="hist-icon">✅</text><text class="hist-date">11-26</text></div><div class="hist-cell status-p"><text class="hist-day">27</text><text class="hist-icon">✅</text><text class="hist-date">11-27</text></div><div class="hist-cell status-p"><text class="hist-day">28</text><text class="hist-icon">✅</text><text class="hist-date">11-28</text></div></div>
+    </div>
+    <div class="section">
+      <div class="sec-head">
+        <text class="sec-title">今日备注</text>
+        <div class="sec-actions"><text class="action-btn">修改</text><text class="action-btn danger">删除</text></div>
+      </div>
+      <div class="note-bubble">
+        <text class="note-text">今天要早接，下午4点来接孩子，谢谢老师！</text>
+        <text class="note-hint">老师已收到您的备注</text>
+      </div>
+    </div>
+    <div class="section">
+      <div class="sec-head"><text class="sec-title" style="cursor:pointer" onclick="showScreen('face')">今日人脸签到 ›</text><text class="sec-meta">1条</text></div>
+      <div class="face-list">
+        <div class="face-row">
+          <text class="face-avatar">明</text>
+          <div class="face-info"><text class="face-name">王小明</text><text class="face-time">08:31</text></div>
+          <text class="face-badge">人脸</text>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="screen" data-screen="points">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">⭐</span> 我的积分</div>
+    <div class="top-badge">家长端 · 10/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:66%"></div></div>
+  <div class="top-hint">积分换礼品 · 明细全透明</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">每一分都是孩子真实的努力——积分让校内校外的鼓励，同一个口径。</div><div class="xi-voice" onclick="pvToggle('points')">▶ 听讲解 · 我的积分</div></div>
+<div class="warm-page">
+    <div class="points-hero">
+      <div class="points-hero-inner">
+        <text class="points-hero-label">小明的积分</text>
+        <text class="points-hero-val">156</text>
+        <text class="points-hero-unit">分</text>
+        <text class="points-hero-week">本周 +42</text>
+      </div>
+    </div>
+    <div class="coupon-card">
+      <div class="coupon-card-head">
+        <text class="coupon-card-title">💰 我的礼金</text>
+        <text class="coupon-card-balance">30</text>
+        <text class="coupon-card-unit">礼金</text>
+      </div>
+      <div class="coupon-records">
+        <div class="coupon-record">
+          <div class="coupon-record-info"><text class="coupon-record-reason">周末打卡奖励</text><text class="coupon-record-time">11-09 10:00</text></div>
+          <text class="coupon-record-amount">+10</text>
+        </div>
+        <div class="coupon-record">
+          <div class="coupon-record-info"><text class="coupon-record-reason">推荐有礼 · 好友注册</text><text class="coupon-record-time">11-05 19:22</text></div>
+          <text class="coupon-record-amount">+20</text>
+        </div>
+      </div>
+    </div>
+    <div class="chip-strip">
+      <div class="chip-scroll">
+        <div class="chip on">王小明</div><div class="chip">王小红</div>
+      </div>
+    </div>
+    <div class="today-points">
+      <text class="today-icon">🎉</text>
+      <text class="today-text">今日积分变化 <text class="today-num">+15</text></text>
+    </div>
+    <div class="section">
+      <div class="sec-head-row"><text class="sec-title">⭐ 积分评价</text><text class="sec-more">全部评价 ▸</text></div>
+      <div class="evalp-list">
+        <div class="evalp-row">
+          <div class="evalp-stars"><text class="evalp-star-on">★★★★★</text></div>
+          <text class="evalp-content">今天课堂发言特别积极，主动上台讲题！</text>
+          <text class="evalp-meta">李老师 · 11-15 · 积分评价</text>
+        </div>
+        <div class="evalp-row">
+          <div class="evalp-stars"><text class="evalp-star-on">★★★★</text><text class="evalp-star-off">★</text></div>
+          <text class="evalp-content">作业完成认真，就是字还要再工整一点。</text>
+          <text class="evalp-meta">王老师 · 11-14 · 积分评价</text>
+        </div>
+      </div>
+    </div>
+    <div class="family-points">
+      <text class="family-icon">🏠</text>
+      <text class="family-text">全家总积分 <text class="family-num">246分</text></text>
+    </div>
+    <div class="section">
+      <text class="sec-title">🎁 积分商城</text>
+      <div class="reward-scroll"><div class="reward-card">
+        <div class="reward-cover"><text class="reward-emoji">✏️</text></div>
+        <text class="reward-name">卡通铅笔</text>
+        <div class="reward-meta"><text class="reward-points">50 积分</text><text class="reward-stock">库存充足</text></div>
+        <button class="reward-btn ">兑换</button>
+      </div><div class="reward-card">
+        <div class="reward-cover"><text class="reward-emoji">🧽</text></div>
+        <text class="reward-name">可爱橡皮</text>
+        <div class="reward-meta"><text class="reward-points">30 积分</text><text class="reward-stock">库存充足</text></div>
+        <button class="reward-btn ">兑换</button>
+      </div><div class="reward-card">
+        <div class="reward-cover"><text class="reward-emoji">🧸</text></div>
+        <text class="reward-name">盲盒公仔</text>
+        <div class="reward-meta"><text class="reward-points">200 积分</text><text class="reward-stock">仅剩 2 件</text></div>
+        <button class="reward-btn disabled">积分不足</button>
+      </div></div>
+    </div>
+    <div class="order-link">
+      <text class="order-link-title">🎁 我的兑换订单</text>
+      <text class="order-link-sub">查看订单进度与礼金明细 ▸</text>
+    </div>
+    <div class="section">
+      <text class="sec-title">积分明细</text>
+      <div class="history-list"><div class="history-row">
+        <div class="history-left"><text class="history-icon">✅</text>
+          <div class="history-info"><text class="history-desc">作业批改 · 数学全对</text><text class="history-date">11-15 17:20</text></div>
+        </div>
+        <text class="history-amount earn">+10</text>
+      </div><div class="history-row">
+        <div class="history-left"><text class="history-icon">✅</text>
+          <div class="history-info"><text class="history-desc">连续签到 12 天奖励</text><text class="history-date">11-15 08:31</text></div>
+        </div>
+        <text class="history-amount earn">+5</text>
+      </div><div class="history-row">
+        <div class="history-left"><text class="history-icon">✅</text>
+          <div class="history-info"><text class="history-desc">课堂表现优秀</text><text class="history-date">11-14 16:05</text></div>
+        </div>
+        <text class="history-amount earn">+20</text>
+      </div><div class="history-row">
+        <div class="history-left"><text class="history-icon">🛒</text>
+          <div class="history-info"><text class="history-desc">兑换 · 卡通铅笔</text><text class="history-date">11-13 12:40</text></div>
+        </div>
+        <text class="history-amount spend">-50</text>
+      </div><div class="history-row">
+        <div class="history-left"><text class="history-icon">🛒</text>
+          <div class="history-info"><text class="history-desc">兑换 · 可爱橡皮</text><text class="history-date">11-10 12:12</text></div>
+        </div>
+        <text class="history-amount spend">-30</text>
+      </div></div>
+      <div class="empty-text">没有更多了</div>
+    </div>
+  </div>
+</div>
+<div class="screen" data-screen="face">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">📡</span> 人脸签到管理</div>
+    <div class="top-badge">家长端 · 2/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:13%"></div></div>
+  <div class="top-hint">刷脸即签到 · 记录实时同步</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">孩子踏入机构的第一秒您就知道——到校不再是转达，而是您亲眼所见的安心。</div><div class="xi-voice" onclick="pvToggle('face')">▶ 听讲解 · 人脸签到管理</div></div>
+<div class="warm-page">
+<div class="page">
+<div class="child-list">
+<div class="section-title">
+👤 选择孩子进行人脸注册
+</div>
+<div class="child-item" data-index="0">
+<div class="child-avatar">
+<div src="" mode="aspectFill" class="xt-img">
+</div>
+</div>
+<div class="child-info">
+<text class="child-name">
+小明
+</text>
+<text class="child-school">
+未设置学校 三年级
+</text>
+</div>
+<div class="child-status">
+<text class="status-tag registered">
+✅ 已注册
+</text>
+<text class="status-tag unregistered">
+未注册
+</text>
+</div>
+<div class="child-delete" data-index="0">
+<text>
+删除
+</text>
+</div>
+</div>
+<div class="info-card">
+<text class="info-title">
+📌 人脸签到说明
+</text>
+<text class="info-text">
+1. 给孩子拍一张清晰的正面照片
+</text>
+<text class="info-text">
+2. 确保光线充足、无口罩/帽子遮挡
+</text>
+<text class="info-text">
+3. 注册后老师可在平板使用人脸签到
+</text>
+</div>
+</div>
+<div class="empty">
+<text class="empty-icon">
+👶
+</text>
+<text class="empty-desc">
+请先去「我的」页面绑定孩子
+</text>
+</div>
+<div class="camera-overlay show">
+<div class="camera-card">
+<div class="camera-header">
+<text class="camera-title">
+📸 小明 人脸注册
+</text>
+<text class="camera-close">
+✕
+</text>
+</div>
+<div class="photo-preview">
+<div class="preview-img xt-img" src="" mode="aspectFill">
+</div>
+<div class="btn-retake">
+重新拍照
+</div>
+</div>
+<div class="photo-actions">
+<div class="btn-camera">
+📷 拍照
+</div>
+</div>
+<text class="status-hint">
+</text>
+<div class="btn-submit disabled">
+
+        注册中...
+      
+</div>
+<div class="requirements">
+<text class="req-title">
+拍摄要求：
+</text>
+<text class="req-item">
+• 正面免冠、表情自然
+</text>
+<text class="req-item">
+• 无口罩、无帽子、无墨镜
+</text>
+<text class="req-item">
+• 光线充足、背景简洁
+</text>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="screen" data-screen="dailyReport">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">📈</span> 成长报告</div>
+    <div class="top-badge">家长端 · 4/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:27%"></div></div>
+  <div class="top-hint">四维报告互跳 · 底栏可回首页</div>
+</div>
+<div class="xt-intro detail">
+  <div class="xi-title">📈 成长报告 · 每天最该打开的一页</div>
+  <div class="xi-guide">这一页，是您每天最该打开的那一页。</div>
+  <ul class="xi-list"><li><b>四个时间维度</b>：日报 · 周报 · 月报 · 学期，从今天看到整个学期</li><li><b>今日到校签到</b>：人脸识别几点几分到校，不是老师口头转达，是您亲眼所见</li><li><b>成长相册</b>：签到、作业、批改的照片自动收进相册，一天的片段自动归档</li><li><b>老师评语 · 今日作业 · 今日积分 · 在托时光</b>：孩子这一天的全貌，一页看完</li></ul>
+  <div class="xi-deep"><b>深层意义</b>　学校把孩子的一天<b>毫无保留地摊开给您看</b>——不是等您来问，而是主动送到您眼前。家校互联的深层，是把「猜」变成「看见」。</div>
+  <div class="xi-voice" onclick="pvToggle('report')">▶ 听讲解 · 成长报告</div>
+</div>
+<div class="warm-page">
+
+<div class="nav-bar"><div class="nav-back">← 返回</div><span class="nav-title">成长报告</span><span class="nav-subtitle">王小明</span></div>
+<div class="child-switch"><div class="child-switch-btn"><span class="child-switch-ico">👨‍👩‍👧</span><span class="child-switch-name">王小明</span><span class="child-switch-arrow">▾</span></div></div>
+<div class="period-nav"><div class="pn-item on">📋 日报</div><div class="pn-item">📅 周报</div><div class="pn-item">📊 月报</div><div class="pn-item">🎓 学期</div></div>
+<div class="chip-row" style="display:flex;gap:8px;justify-content:center;margin:8px 0"><span class="chip on" style="padding:3px 12px;border-radius:999px;background:#0f766e;color:#fff;font-size:13px">今日</span><span class="chip" style="padding:3px 12px;border-radius:999px;background:#f3f4f6;color:#6b7280;font-size:13px">昨日</span></div>
+<div class="checkin-card"><div class="ck-head"><span class="ck-title">📸 今日到校签到</span><span class="ck-face">人脸识别</span></div><div class="ck-img xt-img" style="background:linear-gradient(135deg,#dbeafe,#93c5fd)">📷 人脸签到抓拍</div><div class="ck-time-row"><span class="ck-time">08:31</span><span class="ck-label">人脸签到 · 已到校</span></div></div>
+<div class="album-card"><div class="ck-head"><span class="ck-title">📷 成长相册</span><span class="ab-sub">今日 4 张</span></div><div class="ab-grid">
+<div class="ab-cell"><div class="ab-img xt-img" style="background:#ffe0b2">🖼️</div><span class="ab-tag">签到</span></div>
+<div class="ab-cell"><div class="ab-img xt-img" style="background:#c8e6c9">🖼️</div><span class="ab-tag">作业</span></div>
+<div class="ab-cell"><div class="ab-img xt-img" style="background:#bbdefb">🖼️</div><span class="ab-tag">批改</span></div>
+<div class="ab-cell"><div class="ab-img xt-img" style="background:#f8bbd0">🖼️</div><span class="ab-tag">活动</span></div>
+</div></div>
+<div class="demo">
+<div class="sec-t"><div class="bar daily"></div><span>💬 老师评语</span></div>
+<div class="comment-card"><div class="c-head"><div class="avatar">李</div><div class="c-info"><span class="c-name">李老师</span><span class="c-role">四年级 · 数学</span></div><span class="c-stars">★★★★★</span></div><div class="c-text"><span class="q">「</span>今天课堂发言特别积极，口算全对，还主动帮同学讲题，进步非常明显！<span class="q">」</span></div><div class="c-tags"><span class="ct">积极发言</span><span class="ct">进步明显</span></div></div>
+<div class="sec-t"><div class="bar daily"></div><span>📝 今日作业</span><span class="more">2 项已批改</span></div>
+<div class="hw-list">
+<div class="hw-item"><span class="subj">数学</span><span class="name">口算练习第3页</span><span class="st">已批改</span><div class="hw-fb"><span class="hw-fb-comment">📝 全对，继续保持！</span><div class="rate-row"><div class="rate-stars"><span class="rate-star on">★</span><span class="rate-star on">★</span><span class="rate-star on">★</span><span class="rate-star on">★</span><span class="rate-star on">★</span></div><span class="rate-done">已为老师点赞~</span></div><span class="hw-fb-score">⭐ +10</span></div></div>
+<div class="hw-item"><span class="subj">语文</span><span class="name">背诵《秋天》并签字</span><span class="st">已提交</span><div class="hw-fb"><span class="hw-fb-comment">📝 背诵流畅，签字已确认</span><span class="hw-fb-score">⭐ +5</span></div></div>
+</div>
+<div class="sec-t"><div class="bar daily"></div><span>⭐ 今日积分</span></div>
+<div class="comment-card"><div class="pts-row"><span class="pts-num">+15</span><div class="pts-srcs"><span class="pts-chip">+10 作业批改</span><span class="pts-chip">+5 连续签到</span></div></div></div>
+<div class="sec-t"><div class="bar daily"></div><span>🕐 今日在托时光</span></div>
+<div class="timeline">
+<div class="tl-item"><span class="tl-icon">🤖</span><div class="tl-body"><div class="tl-label-row"><span class="tl-label">到校</span><span class="tl-face">🤖 人脸签到</span></div><span class="tl-time">08:31</span></div></div>
+<div class="tl-item"><span class="tl-icon">🍚</span><div class="tl-body"><div class="tl-label-row"><span class="tl-label">午餐</span></div><span class="tl-time">11:40</span></div></div>
+<div class="tl-item"><span class="tl-icon">🏠</span><div class="tl-body"><div class="tl-label-row"><span class="tl-label">离校</span></div><span class="tl-time">17:05</span></div></div>
+</div>
+<div class="foot-note">✉️ 今日报告已同步至家长端</div>
+</div>
+
+</div>
+</div>
+<div class="screen" data-screen="report">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">🗓️</span> 成长周报</div>
+    <div class="top-badge">家长端 · 5/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:33%"></div></div>
+  <div class="top-hint">日报/周报/月报/学期互跳</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">不每天打扰，但每周一次把起伏讲给您听——家校互联，是让您按自己的节奏读懂孩子。</div><div class="xi-voice" onclick="pvToggle('weekly')">▶ 听讲解 · 成长周报</div></div>
+<div class="warm-page">
+<div class="page">
+<div class="nav-bar">
+<div class="nav-back">
+‹ 返回
+</div>
+<text class="nav-title">
+成长周报
+</text>
+<text class="nav-subtitle">
+</text>
+</div>
+<div class="child-switch">
+<picker mode="selector" range="" range-key="name" value="">
+<div class="child-switch-btn">
+<text class="child-switch-ico">
+👨‍👩‍👧
+</text>
+<text class="child-switch-name">
+</text>
+<text class="child-switch-arrow">
+▾
+</text>
+</div>
+</picker>
+</div>
+<div class="period-nav">
+<div class="pn-item">
+📋 日报
+</div>
+<div class="pn-item on">
+📅 周报
+</div>
+<div class="pn-item">
+📊 月报
+</div>
+<div class="pn-item">
+🎓 学期
+</div>
+</div>
+<div class="report-list">
+<div class="report-card" data-report="">
+<div class="report-week">
+<text class="week-range">
+ ~ 
+</text>
+<text class="report-date-icon">
+📅
+</text>
+</div>
+<div class="report-stats">
+<div class="mini-stat">
+<text class="mini-num">
+/
+</text>
+<text class="mini-label">
+出勤
+</text>
+</div>
+<div class="mini-stat">
+<text class="mini-num">
+%
+</text>
+<text class="mini-label">
+作业
+</text>
+</div>
+<div class="mini-stat">
+<text class="mini-num">
++10
+</text>
+<text class="mini-label">
+积分
+</text>
+</div>
+</div>
+<text class="report-comment">
+
+        💬 
+      
+</text>
+<text class="report-auto-comment">
+
+        🤖 
+      
+</text>
+</div>
+<div class="empty-tip">
+<text class="empty-icon">
+📊
+</text>
+<text>
+暂无成长日报
+</text>
+<text class="empty-desc">
+老师发布后即可查看
+</text>
+</div>
+</div>
+<div class="album-block">
+<div class="album-title">
+📸 成长相册
+</div>
+<div class="album-empty">
+还没有照片，签到、交作业后这里会出现孩子的成长记录
+</div>
+<div class="album-group">
+<div class="album-date">
+11-15
+</div>
+<div class="album-grid">
+<div class="album-item">
+<div class="album-img xt-img" src="" mode="aspectFill" data-url="">
+</div>
+<text class="album-tag">
+</text>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="screen" data-screen="monthly">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">📊</span> 成长月报</div>
+    <div class="top-badge">家长端 · 6/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:40%"></div></div>
+  <div class="top-hint">日报/周报/月报/学期互跳</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">月月有账本，成长看得见——学校敢把一个月摊开，因为每一页都经得起对照。</div><div class="xi-voice" onclick="pvToggle('monthly')">▶ 听讲解 · 成长月报</div></div>
+<div class="warm-page">
+<div class="page">
+<div class="nav-bar">
+<div class="nav-back">
+← 返回
+</div>
+<text class="nav-title">
+成长月报
+</text>
+<text class="nav-subtitle">
+</text>
+</div>
+<div class="child-switch">
+<picker mode="selector" range="" range-key="name" value="">
+<div class="child-switch-btn">
+<text class="child-switch-ico">
+👨‍👩‍👧
+</text>
+<text class="child-switch-name">
+</text>
+<text class="child-switch-arrow">
+▾
+</text>
+</div>
+</picker>
+</div>
+<div class="period-nav">
+<div class="pn-item">
+📋 日报
+</div>
+<div class="pn-item">
+📅 周报
+</div>
+<div class="pn-item on">
+📊 月报
+</div>
+<div class="pn-item">
+🎓 学期
+</div>
+</div>
+<div class="month-switch">
+<text class="ms-btn disabled">
+‹ 上月
+</text>
+<text class="ms-label">
+11月
+</text>
+<text class="ms-btn disabled">
+下月 ›
+</text>
+</div>
+<block>
+<div class="demo">
+<div class="ai-summary-card">
+<div class="ai-summary-title">
+✨ AI 成长总结
+<text class="ai-badge">
+由AI生成
+</text>
+</div>
+<text class="ai-summary-text">
+</text>
+<text class="ai-foot">
+内容由AI自动生成，仅供参考
+</text>
+</div>
+<div class="month-grid">
+<div class="m ">
+<text class="n">
+</text>
+<text class="l">
+</text>
+</div>
+</div>
+<div class="trend">
+<div class="t">
+📈 本月出勤趋势
+</div>
+<div class="bars">
+<div class="b">
+<text class="v">
+%
+</text>
+<div class="bar " style="">
+</div>
+<text class="w">
+</text>
+</div>
+</div>
+</div>
+<div class="sec-t">
+<div class="bar monthly">
+</div>
+<text>
+💬 老师月度点评
+</text>
+</div>
+<div class="comment-card">
+<div class="c-head">
+<div class="avatar">
+</div>
+<div class="c-info">
+<text class="c-name">
+</text>
+<text class="c-role">
+</text>
+</div>
+</div>
+<div class="c-text">
+<text class="q">
+「
+</text>
+
+<text class="q">
+」
+</text>
+</div>
+<div class="c-tags">
+<text class="ct">
+</text>
+</div>
+</div>
+<div class="highlight">
+<div class="t">
+🏆 本月成长亮点
+</div>
+<div class="row">
+✅ 
+</div>
+</div>
+<div class="foot-note">
+✉️ 日积月累，皆是成长
+</div>
+</div>
+</block>
+</div>
+</div>
+</div>
+<div class="screen" data-screen="semester">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">🗂️</span> 学期成长档案</div>
+    <div class="top-badge">家长端 · 7/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:47%"></div></div>
+  <div class="top-hint">日报/周报/月报/学期互跳</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">一个学期的轨迹装进档案——多年后回看，您会庆幸这些记录从第一天就没断过。</div><div class="xi-voice" onclick="pvToggle('semester')">▶ 听讲解 · 学期成长档案</div></div>
+<div class="warm-page">
+<div class="page">
+<div class="nav-bar">
+<div class="nav-back">
+← 返回
+</div>
+<text class="nav-title">
+学期成长档案
+</text>
+<text class="nav-subtitle">
+</text>
+</div>
+<div class="child-switch">
+<picker mode="selector" range="" range-key="name" value="">
+<div class="child-switch-btn">
+<text class="child-switch-ico">
+👨‍👩‍👧
+</text>
+<text class="child-switch-name">
+</text>
+<text class="child-switch-arrow">
+▾
+</text>
+</div>
+</picker>
+</div>
+<div class="period-nav">
+<div class="pn-item">
+📋 日报
+</div>
+<div class="pn-item">
+📅 周报
+</div>
+<div class="pn-item">
+📊 月报
+</div>
+<div class="pn-item on">
+🎓 学期
+</div>
+</div>
+<div class="month-switch">
+<text class="ms-btn disabled">
+‹ 上一期
+</text>
+<text class="ms-label">
+11月
+</text>
+<text class="ms-btn disabled">
+下一期 ›
+</text>
+</div>
+<block>
+<div class="demo">
+<div class="ai-summary-card">
+<div class="ai-summary-title">
+✨ AI 成长总结
+<text class="ai-badge">
+由AI生成
+</text>
+</div>
+<text class="ai-summary-text">
+</text>
+<text class="ai-foot">
+内容由AI自动生成，仅供参考
+</text>
+</div>
+<div class="month-grid">
+<div class="m ">
+<text class="n">
+</text>
+<text class="l">
+</text>
+</div>
+</div>
+<div class="trend">
+<div class="t">
+📈 本学期出勤趋势
+</div>
+<div class="bars">
+<div class="b">
+<text class="v">
+%
+</text>
+<div class="bar " style="">
+</div>
+<text class="w">
+</text>
+</div>
+</div>
+</div>
+<div class="sec-t">
+<div class="bar monthly">
+</div>
+<text>
+💬 老师学期点评
+</text>
+</div>
+<div class="comment-card">
+<div class="c-head">
+<div class="avatar">
+</div>
+<div class="c-info">
+<text class="c-name">
+</text>
+<text class="c-role">
+</text>
+</div>
+</div>
+<div class="c-text">
+<text class="q">
+「
+</text>
+
+<text class="q">
+」
+</text>
+</div>
+<div class="c-tags">
+<text class="ct">
+</text>
+</div>
+</div>
+<div class="highlight">
+<div class="t">
+🏆 本学期成长亮点
+</div>
+<div class="row">
+✅ 
+</div>
+</div>
+<div class="foot-note">
+✉️ 日积月累，皆是成长
+</div>
+</div>
+</block>
+</div>
+</div>
+</div>
+<div class="screen" data-screen="homework">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">📝</span> 作业管理</div>
+    <div class="top-badge">家长端 · 8/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:53%"></div></div>
+  <div class="top-hint">上传 → 状态 → 批改，一条流水线</div>
+</div>
+<div class="xt-intro detail">
+  <div class="xi-title">📝 作业管理 · 陪写不慌</div>
+  <div class="xi-guide">陪写作业这件事，从此不再鸡飞狗跳。</div>
+  <ul class="xi-list"><li><b>拍照上传</b>：选孩子、选科目（可多选），拍下作业一键提交</li><li><b>完成状态一目了然</b>：待提交 → 已提交 → 已批改，三个状态像快递一样可追踪</li><li><b>老师批改</b>：批改照片 + 评语原样送达，还能给老师点个赞 ⭐</li><li><b>最近作业列表</b>：全科目筛选，谁布置的、改没改，翻一翻全知道</li></ul>
+  <div class="xi-deep"><b>深层意义</b>　作业从「家里催、群里问」变成一条<b>看得见的流水线</b>——您知道进度，老师知道难点，孩子被两边稳稳托住。这就是家校互联最实在的样子。</div>
+  <div class="xi-voice" onclick="pvToggle('homework')">▶ 听讲解 · 作业管理</div>
+</div>
+<div class="warm-page">
+<div class="warm-page">
+<div>
+<div class="warm-head">
+<text class="head-title">
+作业管理
+</text>
+<text class="head-sub">
+查看作业 · 拍照上传 · 老师批改
+</text>
+</div>
+<div class="tab-strip">
+<div class="tab upload" data-tab="upload">
+📤 上传作业
+</div>
+<div class="tab status" data-tab="status">
+📊 完成状态
+</div>
+<div class="tab comment" data-tab="comment">
+💬 老师评语
+</div>
+</div>
+<div>
+<block>
+<div class="field">
+<text class="field-label">
+选择孩子
+</text>
+<div class="chip-scroll">
+<div class="chip on" data-index="0">
+<text>
+✅ 小明
+</text>
+</div>
+</div>
+</div>
+<div class="field">
+<text class="field-label">
+选择科目（可多选）
+</text>
+<div class="subject-chips">
+<div class="subject-chip all on">
+全选
+</div>
+<div class="subject-chip on" data-subject="">
+</div>
+</div>
+</div>
+<div class="field">
+<text class="field-label">
+作业内容
+</text>
+<textarea class="field-textarea" placeholder="请输入作业内容..." value="">
+</textarea>
+</div>
+<div class="field">
+<text class="field-label">
+拍照上传
+</text>
+<div class="upload-grid">
+<div class="upload-item">
+<div class="upload-img xt-img" src="" mode="aspectFill">
+</div>
+<text class="upload-del" data-index="0">
+×
+</text>
+</div>
+</div>
+<div class="upload-btn">
+📸 拍照或从相册选择
+</div>
+</div>
+<div class="btn-primary" style="margin: 0 16px 20px;" loading="">
+提交中…
+</div>
+</block>
+<div class="section-title" style="padding: 0 16px;margin: 10px 0 6px;">
+📋 最近作业
+</div>
+<div class="card-list">
+<div class="hw-card">
+<div class="hw-left">
+<div class="hw-subject-tags">
+<text class="hw-tag all">
+全科目
+</text>
+</div>
+<div class="hw-subject-tags">
+<text class="hw-tag">
+</text>
+</div>
+<text class="hw-content">
+</text>
+<text class="hw-date">
+截止: 11-15
+</text>
+</div>
+<div class="hw-right">
+<text class="hw-status excellent">
+
+            excellent
+          
+</text>
+<div class="hw-submit-btn" data-hw="">
+📤 提交这份
+</div>
+<div class="hw-edit-row">
+<div class="hw-edit-btn" data-id="">
+✏️ 编辑
+</div>
+<div class="hw-edit-btn danger" data-id="">
+🗑 删除
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="screen" data-screen="evaluation">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">💬</span> 评价查看</div>
+    <div class="top-badge">家长端 · 9/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:60%"></div></div>
+  <div class="top-hint">真实界面 · 一句话见顶部</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">老师眼中的孩子原样送达——夸奖和提醒都不留在办公室，第一时间到家。</div><div class="xi-voice" onclick="pvToggle('eval')">▶ 听讲解 · 评价查看</div></div>
+<div class="warm-page">
+<div class="page">
+<div>
+<div class="switcher-bar">
+<div class="switcher-scroll">
+<div class="switcher-chip active" data-index="0">
+<text class="chip-name">
+小明
+</text>
+</div>
+</div>
+</div>
+<div class="eval-stat">
+<div class="eval-stat-item">
+<text class="eval-stat-num">
+</text>
+<text class="eval-stat-label">
+全部评价
+</text>
+</div>
+<div class="eval-stat-item">
+<text class="eval-stat-num good">
+</text>
+<text class="eval-stat-label">
+好评
+</text>
+</div>
+<div class="eval-stat-item">
+<text class="eval-stat-num improvement">
+</text>
+<text class="eval-stat-label">
+待改进
+</text>
+</div>
+</div>
+<div class="filter-bar">
+<div class="filter-tab all" data-type="all">
+全部
+</div>
+<div class="filter-tab daily" data-type="daily">
+日常评价
+</div>
+<div class="filter-tab period" data-type="period">
+阶段评价
+</div>
+<div class="filter-tab points" data-type="points">
+积分评价
+</div>
+</div>
+<div class="eval-list">
+<div class="eval-card">
+<div class="eval-header">
+<div class="eval-avatar xt-img" src="" mode="aspectFill">
+</div>
+<div class="eval-header-info">
+<text class="eval-teacher">
+李老师boss_review
+</text>
+<text class="eval-date">
+11-15
+</text>
+<text class="eval-child">
+👶 小明
+</text>
+</div>
+<div class="eval-type-badge ">
+
+          daily
+        
+</div>
+<div class="eval-type-badge period">
+🤖 源自AI
+</div>
+<div class="eval-type-badge boss">
+👑 老板点评
+</div>
+</div>
+<div class="eval-tags">
+<text class="eval-tag">
+</text>
+</div>
+<div class="eval-body">
+<text class="eval-content">
+课堂表现积极，主动发言！
+</text>
+<div class="eval-imgs">
+<div class="eval-img-item xt-img" src="" mode="aspectFill" data-urls="" data-current="">
+</div>
+</div>
+</div>
+<div class="eval-footer">
+<text class="eval-points">
+获得 10 积分
+</text>
+</div>
+</div>
+</div>
+<div class="load-more">
+<text>
+没有更多了
+</text>
+</div>
+<div class="load-more">
+<text>
+加载更多
+</text>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="screen" data-screen="payment">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">💰</span> 在线缴费</div>
+    <div class="top-badge">家长端 · 11/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:73%"></div></div>
+  <div class="top-hint">账单明细 · 在线支付</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">账单清清楚楚，信任才不含糊——家校互联，先从钱算得明白开始。</div><div class="xi-voice" onclick="pvToggle('payment')">▶ 听讲解 · 在线缴费</div></div>
+<div class="warm-page">
+<div class="warm-page">
+<div>
+<div class="warm-head">
+<text class="head-title">
+缴费中心
+</text>
+<text class="head-sub">
+查看套餐 · 在线缴费 · 历史记录
+</text>
+</div>
+<div class="chip-strip">
+<div class="chip-scroll">
+<div class="chip on" data-index="0">
+<text>
+小明
+</text>
+</div>
+</div>
+</div>
+<div class="section">
+<text class="sec-title">
+当前套餐
+</text>
+<div class="plan-hero">
+<div class="hero-top">
+<text class="hero-name">
+📚 
+</text>
+<text class="hero-status ">
+</text>
+</div>
+<div class="hero-price">
+¥
+<text class="hero-unit">
+ / 30天
+</text>
+</div>
+<div class="hero-period">
+
+        服务周期： - 
+        
+<text>
+ · 剩余  天
+</text>
+</div>
+<div class="hero-tags">
+<text class="hero-tag">
+</text>
+</div>
+<div class="hero-detail">
+<text class="hero-detail-title">
+📋 套餐详情
+</text>
+<text class="hero-detail-item">
+· 
+</text>
+</div>
+</div>
+<div class="plan-stats">
+<div class="plan-stat">
+<div class="stat-v">
+</div>
+<div class="stat-l">
+剩余天数
+</div>
+</div>
+<div class="plan-stat">
+<div class="stat-v">
+</div>
+<div class="stat-l">
+服务功能
+</div>
+</div>
+<div class="plan-stat">
+<div class="stat-v">
+</div>
+<div class="stat-l">
+生效日期
+</div>
+</div>
+</div>
+<div class="plan-prepaid">
+<div class="prepaid-row">
+<text class="prepaid-name">
+📚 
+</text>
+<text class="prepaid-status">
+</text>
+</div>
+<div class="prepaid-meta">
+生效日： · ¥
+</div>
+</div>
+<div class="ready-section">
+<text class="ready-title">
+📦 待享受额度（点开始生效）
+</text>
+<div class="ready-card">
+<div class="ready-row">
+<text class="ready-name">
+📚 
+</text>
+<text class="ready-price">
+¥
+</text>
+</div>
+<div class="ready-meta">
+通过于  · 有效期 30 天（开始后不可退）
+</div>
+<div class="ready-btn" data-id="">
+▶ 开始享受
+</div>
+</div>
+</div>
+<div class="expired-box">
+<text class="expired-text">
+⏰ 套餐已到期，请续费继续享受服务
+</text>
+<div class="expired-btn">
+🔄 去续费
+</div>
+</div>
+<div class="slogan-box">
+<text class="slogan-title">
+💛 家校共育
+</text>
+<text class="slogan-formula">
+好的成长 = 
+<text class="slogan-num">
+5%
+</text>
+ 专业陪伴 + 
+<text class="slogan-num">
+95%
+</text>
+ 家庭教育
+</text>
+<text class="slogan-sub">
+我们做专业的 5%，与您共同陪伴孩子的 95%
+</text>
+</div>
+</div>
+<div class="section">
+<text class="sec-title">
+可选套餐
+</text>
+<div class="plan-card plan-option" data-id="">
+<div class="plan-top">
+<text class="plan-icon">
+📦
+</text>
+<div class="plan-info">
+<text class="plan-name">
+小明
+</text>
+<text class="plan-desc">
+</text>
+<text class="plan-desc">
+服务周期：
+</text>
+</div>
+<text class="plan-price">
+¥
+</text>
+</div>
+<div class="buy-btn" data-id="">
+立即购买
+</div>
+</div>
+</div>
+<div class="section">
+<text class="sec-title">
+缴费记录
+</text>
+<div class="history-list">
+<div class="history-row">
+<div class="history-left">
+<text class="history-icon">
+📄
+</text>
+<div class="history-info">
+<text class="history-desc">
+ - 元
+</text>
+<text class="history-date">
+11-15
+</text>
+</div>
+</div>
+<text class="history-status present">
+已签到
+</text>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="screen" data-screen="announcement">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">📢</span> 公告与确认</div>
+    <div class="top-badge">家长端 · 12/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:80%"></div></div>
+  <div class="top-hint">真实界面 · 一句话见顶部</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">重要的事郑重推给您，还要等您回执——学校发声、您确认，互联是双向的。</div><div class="xi-voice" onclick="pvToggle('notice')">▶ 听讲解 · 公告与确认</div></div>
+<div class="warm-page">
+<div class="page">
+<div>
+<div class="page-header">
+<text class="page-title">
+机构公告
+</text>
+</div>
+<div class="list">
+<div class="card" data-idx="0">
+<div class="card-header">
+<text class="card-type type-">
+
+            policy
+          
+</text>
+<div class="status-badge read">
+
+            已确认
+          
+</div>
+</div>
+<text class="card-title">
+</text>
+<text class="card-desc">
+课堂表现积极，主动发言！
+</text>
+<div class="card-footer">
+<text class="card-time">
+08:30
+</text>
+<text class="sign-required">
+需确认
+</text>
+<text class="sign-done">
+✅ 已确认
+</text>
+</div>
+</div>
+</div>
+</div>
+<div class="detail-view">
+<div class="detail-header">
+<text class="back-btn">
+← 返回
+</text>
+<text class="detail-type type-">
+
+        policy
+      
+</text>
+</div>
+<text class="detail-title">
+</text>
+<text class="detail-content">
+</text>
+<div class="status-card">
+<text class="status-icon">
+✅
+</text>
+<text class="status-text">
+您已确认收到
+</text>
+<text class="status-time">
+</text>
+</div>
+<div class="sign-section">
+<div class="sign-notice">
+<text class="sign-warn-icon">
+⚠️
+</text>
+<text class="sign-warn-text">
+请仔细阅读以上内容，确认无误后点击下方按钮
+</text>
+</div>
+<div class="btn-sign">
+提交中...
+</div>
+</div>
+<div class="status-card">
+<text class="status-icon">
+📖
+</text>
+<text class="status-text">
+已阅读
+</text>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="screen" data-screen="community">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">👪</span> 社区</div>
+    <div class="top-badge">家长端 · 13/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:87%"></div></div>
+  <div class="top-hint">机构发布 · 家长互动</div>
+</div>
+<div class="xt-intro detail">
+  <div class="xi-title">👪 社区 · 机构的门往您这边开了一扇</div>
+  <div class="xi-guide">机构的门，往您这边开了一扇。</div>
+  <ul class="xi-list"><li><b>五个栏目</b>：机构活动 · 班级日常 · 餐食 · 通知 · 快乐生活——孩子在校的日常直播</li><li><b>影像</b>：老师上传的孩子影像在这里集中查看，不错过每个瞬间</li><li><b>互动</b>：可以评论、点赞（社区规范护航，内容由机构工作人员发布）</li></ul>
+  <div class="xi-deep"><b>深层意义</b>　您看到的不是宣传稿，是孩子<b>真实过着的每一天</b>——今天吃了什么、玩了什么、学了什么，家校互联让机构生活在您眼前展开。</div>
+  <div class="xi-voice" onclick="pvToggle('community')">▶ 听讲解 · 社区</div>
+</div>
+<div class="warm-page">
+
+<div class="warm-head"><span class="head-title">机构动态</span><span class="head-sub">了解孩子在机构的最新情况</span></div>
+<div class="banner-wrap"><div class="banner-swp"><div class="banner-slide"><div class="banner-img xt-img" style="background:linear-gradient(135deg,#ffe0b2,#ff9f43)">🏃</div><div class="banner-overlay"><span class="banner-tag">机构活动</span><span class="banner-title">秋季亲子运动会开始报名啦</span></div></div></div></div>
+<div class="chip-strip"><div class="chip-scroll"><span class="chip on">全部</span><span class="chip">班级日常</span><span class="chip">餐食</span><span class="chip">活动</span><span class="chip">通知</span><span class="chip">快乐生活</span><span class="chip">📸 影像</span></div></div>
+<div class="feed-list">
+<div class="feed-card"><div class="feed-head"><div class="feed-avatar" style="background:#0f766e;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">李</div><div class="feed-info"><span class="feed-author">李老师</span><div class="feed-meta"><span class="feed-time">11-15 16:20</span><span class="feed-tag">班级日常</span></div></div></div><span class="feed-body">今天手工课做了「秋天的树」，孩子们把落叶贴成了一幅画。小明主动帮同桌捡胶棒，特别暖，给全班点个赞！</span><div class="feed-images"><div class="feed-img xt-img" style="background:#ffe0b2">🖼️</div><div class="feed-img xt-img" style="background:#c8e6c9">🖼️</div><div class="feed-img xt-img" style="background:#bbdefb">🖼️</div></div><div class="feed-foot"><div class="feed-action liked"><span class="action-emoji">❤️</span><span class="action-num">12</span></div><div class="feed-action"><span class="action-emoji">💬</span><span class="action-num">2</span></div><div class="feed-action report"><span class="report-text">举报</span></div></div><div class="comment-box" style="display:block"><div class="comment-list"><div class="comment-item"><span class="comment-author">李爸爸：</span><span class="comment-content">娃回来说画了大树，谢谢老师！</span></div><div class="comment-item"><span class="comment-author">张妈妈：</span><span class="comment-content">手工课太有意思了，孩子回家一直念叨</span></div></div><input class="comment-input" placeholder="说点什么..." disabled><div class="comment-send">发送</div></div></div>
+<div class="feed-card"><div class="feed-head"><div class="feed-avatar" style="background:#0f766e;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">王</div><div class="feed-info"><span class="feed-author">王营养师</span><div class="feed-meta"><span class="feed-time">11-15 11:05</span><span class="feed-tag">餐食</span></div></div></div><span class="feed-body">今日午餐：番茄牛腩、清炒时蔬、南瓜小米粥、时令水果。光盘的小朋友奖励一颗小星星～</span><div class="feed-images"><div class="feed-img xt-img" style="background:#ffccbc">🖼️</div><div class="feed-img xt-img" style="background:#fff9c4">🖼️</div></div><div class="feed-foot"><div class="feed-action liked"><span class="action-emoji">❤️</span><span class="action-num">9</span></div><div class="feed-action"><span class="action-emoji">💬</span><span class="action-num">0</span></div><div class="feed-action report"><span class="report-text">举报</span></div></div></div>
+<div class="feed-card"><div class="feed-head"><div class="feed-avatar" style="background:#0f766e;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">教</div><div class="feed-info"><span class="feed-author">教务处</span><div class="feed-meta"><span class="feed-time">11-14 18:00</span><span class="feed-tag">通知</span></div></div></div><span class="feed-body">本周五下午亲子活动，请家长 16:50 前到教室签到，记得给孩子带一杯温水。已报名的家长回执一下～</span><div class="feed-foot"><div class="feed-action liked"><span class="action-emoji">❤️</span><span class="action-num">8</span></div><div class="feed-action"><span class="action-emoji">💬</span><span class="action-num">0</span></div><div class="feed-action report"><span class="report-text">举报</span></div></div></div>
+</div>
+<div class="compliance-tip">本社区内容由机构工作人员发布，评论需遵守社区规范</div>
+
+</div>
+</div>
+<div class="screen" data-screen="invite">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">🎁</span> 推荐有礼</div>
+    <div class="top-badge">家长端 · 14/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:93%"></div></div>
+  <div class="top-hint">真实界面 · 一句话见顶部</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">把这份安心分享给身边的家长——家校互联的圈子，因信任而扩大。</div><div class="xi-voice" onclick="pvToggle('invite')">▶ 听讲解 · 推荐有礼</div></div>
+<div class="warm-page">
+<div class="warm-page">
+<div>
+<div class="invite-card">
+<text class="invite-emoji">
+🎁
+</text>
+<text class="invite-title">
+推荐有礼
+</text>
+<text class="invite-sub">
+邀请家长注册，双方各得奖励
+</text>
+<div class="reward-row">
+<div class="reward-cell">
+<text class="reward-val">
+10
+</text>
+<text class="reward-lbl">
+积分
+</text>
+</div>
+<div class="reward-cell">
+<text class="reward-val">
+</text>
+<text class="reward-lbl">
+礼金（元）
+</text>
+</div>
+</div>
+<div class="btn-share" open-type="share">
+📤 邀请家长加入
+</div>
+<div class="copy-link">
+复制邀请口令
+</div>
+</div>
+<div class="record-card">
+<text class="record-title">
+我的邀请记录
+</text>
+<div class="record-row">
+<div class="record-info">
+<text class="record-name">
+</text>
+<text class="record-time">
+ 奖励到账
+</text>
+<text class="record-time">
+ 已撤回
+</text>
+</div>
+<text class="record-status rewarded">
+rewarded
+</text>
+</div>
+</div>
+<div class="tip-note">
+说明：被邀请家长注册成功后，奖励自动发放到账；机构可随时调整奖励数额。
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="screen" data-screen="students">
+<div class="top-bar">
+  <div class="top-row">
+    <div class="top-title"><span class="tt-emoji">👨‍👩‍👧</span> 学生信息</div>
+    <div class="top-badge">家长端 · 15/15</div>
+  </div>
+  <div class="top-progress"><div class="top-progress-bar" style="width:100%"></div></div>
+  <div class="top-hint">真实界面 · 一句话见顶部</div>
+</div>
+<div class="xt-intro one"><span class="xi-ico">💬</span><div class="xi-text">孩子的档案您做主——知情与掌控，是一切家校互联的前提。</div><div class="xi-voice" onclick="pvToggle('students')">▶ 听讲解 · 学生信息</div></div>
+<div class="warm-page">
+<div class="warm-page">
+<div>
+<div class="warm-head">
+<text class="head-title">
+我的孩子
+</text>
+<text class="head-sub">
+2个孩子
+</text>
+</div>
+<div class="child-list">
+<div class="child-card">
+<div class="child-top">
+<text class="child-avatar">
+小明
+</text>
+<div class="child-info">
+<text class="child-name">
+小明
+</text>
+<text class="child-grade">
+三年级 
+</text>
+</div>
+<text class="child-status present">
+
+          ✅ 已签到
+        
+</text>
+</div>
+<div class="child-meta">
+<text class="child-meta-item">
+👤 未知 · ?岁
+</text>
+</div>
+<div class="child-actions">
+<text class="action-btn" data-id="">
+🤖 人脸录入
+</text>
+<text class="action-btn" data-id="">
+✏️ 编辑
+</text>
+<text class="action-btn" data-id="">
+📞 紧急电话
+</text>
+<text class="action-btn danger" data-id="">
+🗑️ 解除绑定
+</text>
+</div>
+</div>
+</div>
+<div class="add-area">
+<div class="btn-outline">
++ 绑定新孩子
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<nav class="tabbar"><div class="tab on" data-tab="home" onclick="xtTab(this)"><span class="ti">🏠</span>首页</div><div class="tab" data-tab="checkin" onclick="xtTab(this)"><span class="ti">🧍</span>签到</div><div class="tab" data-tab="dailyReport" onclick="xtTab(this)"><span class="ti">📈</span>报告</div><div class="tab" data-tab="homework" onclick="xtTab(this)"><span class="ti">📝</span>作业</div><div class="tab" data-tab="points" onclick="xtTab(this)"><span class="ti">⭐</span>我的</div></nav>
+<div class="xt-toast" id="xtToast"></div>
+<div class="pv-bar" id="pvBar" style="display:none" onclick="pvToggle(this.dataset.voice)"><span class="pv-ico">🔊</span><span class="pv-txt">听讲解</span><span class="pv-state">▶</span></div>
+<div class="guide-float" id="guideFloat">👆 点一点带数字的模块，听讲解</div>
+<div class="sheet-mask" id="sheetMask" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-grab" onclick="closeSheet()"></div>
+  <div class="sheet-badge">📖 功能讲解</div>
+  <div class="sheet-title" id="sTitle"></div>
+  <div class="sheet-emotion" id="sEmotion"></div>
+
+  <div class="voice-player" id="voicePlayer" onclick="toggleVoice()">
+    <div class="voice-btn" id="voiceBtn">▶</div>
+    <div class="voice-info">
+      <div class="voice-label" id="voiceLabel">点我听语音讲解</div>
+      <div class="voice-hint">温暖女声 · 已为您配好</div>
+    </div>
+    <div class="voice-wave"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="explain-text" id="explainText"></div>
+  <div class="value-title">这个功能，能让您——</div>
+  <div class="value-badges" id="valueBadges"></div>
+  <div class="sheet-close" onclick="closeSheet()">收起</div>
+</div>
+</div></div>
+<script>
+// ============ 模块数据（引用真实 mp3）============
+const VOICE_DATA = {
+  "banner_0": "assets/banner_0.mp3",
+  "banner_1": "assets/banner_1.mp3",
+  "banner_2": "assets/banner_2.mp3",
+  "checkin_0": "assets/checkin_0.mp3",
+  "checkin_1": "assets/checkin_1.mp3",
+  "checkin_2": "assets/checkin_2.mp3",
+  "checkin_3": "assets/checkin_3.mp3",
+  "checkin_4": "assets/checkin_4.mp3",
+  "eval_0": "assets/eval_0.mp3",
+  "eval_1": "assets/eval_1.mp3",
+  "eval_2": "assets/eval_2.mp3",
+  "eval_3": "assets/eval_3.mp3",
+  "functions_0": "assets/functions_0.mp3",
+  "functions_1": "assets/functions_1.mp3",
+  "functions_2": "assets/functions_2.mp3",
+  "head_0": "assets/head_0.mp3",
+  "head_1": "assets/head_1.mp3",
+  "head_2": "assets/head_2.mp3",
+  "head_3": "assets/head_3.mp3",
+  "invite_0": "assets/invite_0.mp3",
+  "invite_1": "assets/invite_1.mp3",
+  "invite_2": "assets/invite_2.mp3",
+  "note_0": "assets/note_0.mp3",
+  "note_1": "assets/note_1.mp3",
+  "note_2": "assets/note_2.mp3",
+  "notice_0": "assets/notice_0.mp3",
+  "notice_1": "assets/notice_1.mp3",
+  "notice_2": "assets/notice_2.mp3",
+};
+const MODULES = {
+  head:{title:'这是您和孩子的「安心小站」',emotion:'💛 被重视 · 温暖归属',
+    sentences:['亲爱的家长，欢迎回家。','这里呀，是专属于您和孩子的温暖小站。','每天打开它，孩子在托辅中心的一天，您都能看得清清楚楚。','不用追着老师问，也不用在家瞎担心——因为您的牵挂，我们都懂。'],
+    values:['know','love']},
+  checkin:{title:'孩子到校那一刻，您就安心了',emotion:'💛 安心 · 不再牵挂',
+    sentences:['您看呀，孩子一到校，这里就亮起一颗小绿灯，写着已签到。','就这三个字，能让忙碌的您，心里那块石头稳稳落地。','连续签到多少天、今天班里到了几个小朋友、孩子攒了多少积分，都在这儿。','最重要的是——您和老师看到的，是一样的。','这才叫家园同步，一起呵护孩子的成长。'],
+    values:['school','know','love']},
+  banner:{title:'孩子的每一次活动，都不想让您缺席',emotion:'💛 参与感 · 不缺席',
+    sentences:['托辅中心的活动、优惠、新鲜事儿，我们都第一时间放在这里。','因为呀，孩子的成长只有一次，每一次活动、每一个惊喜，我们都希望您能参与进来。','别让忙碌，错过了孩子的小世界。'],
+    values:['school','love']},
+  notice:{title:'重要的话，绝不让您错过',emotion:'💛 掌控感 · 不焦虑',
+    sentences:['放假安排、亲子活动、饮食调整……这些重要的事儿呀，我们都会郑重地推送给您。','您再也不用担心，哎呀我没看到通知。','每一条，都替您记着呢。孩子的事儿，再小也是大事。'],
+    values:['school']},
+  invite:{title:'好东西，要和好朋友分享',emotion:'💛 分享 · 双向温暖',
+    sentences:['要是您觉得我们还不错，就把这份安心呀，分享给身边的家长朋友吧。','邀请成功，您和朋友都有一份小心意，积分加礼金。','好的托辅，值得让更多人知道。让更多的孩子，也被温柔以待。'],
+    values:['school','love']},
+  functions:{title:'八个常用功能，抬手就到',emotion:'💛 顺手 · 省心',
+    sentences:['成长报告、作业、积分、缴费、社区、评价、孩子、公告——咱们最常用的八个功能呀，就摆在首页这儿。','轻轻一点就到，不用翻来翻去地找。','省下来的时间呀，多陪陪孩子，比什么都强。'],
+    values:['school','know']},
+  eval:{title:'老师眼中的孩子，您也看得见',emotion:'💛 被看见 · 欣慰',
+    sentences:['老师对孩子的每一条评价呀，都会第一时间送到您眼前。','孩子今天开不开心、有没有进步、和小朋友相处得好不好……','老师都看在眼里、记在心上。','也让您呀，不错过孩子成长的每一个小脚印。那些细微的小进步，都值得被看见。'],
+    values:['know','love']},
+  note:{title:'想跟老师说的话，写在这儿',emotion:'💛 沟通 · 无距离',
+    sentences:['今天要早点接孩子、孩子有点不舒服、不爱吃牛肉……这些小事儿呀，写在这儿告诉老师就行。','老师能看到，就会多留意咱们家宝贝。','家园之间呀，就是靠这些贴心的小细节，越走越近的。您说的每一句话，我们都很重视。'],
+    values:['school','love']}
+};
+const VALUES={
+  school:{cls:'v-school',icon:'🏫',label:'家校联合'},
+  know:{cls:'v-know',icon:'👁️',label:'了解学生'},
+  love:{cls:'v-love',icon:'❤️',label:'亲子互动'}
+};
+
+// ============ 音频播放引擎（真实 mp3）============
+let currentMod=null, playing=false, clipIndex=0, audio=null;
+
+function stopAudio(){
+  if(audio){audio.pause();audio=null;}
+  playing=false;
+  document.getElementById('voicePlayer').classList.remove('playing');
+  document.getElementById('voiceBtn').textContent='▶';
+  document.getElementById('voiceLabel').textContent='点我听语音讲解';
+  document.querySelectorAll('.sentence').forEach(s=>s.classList.remove('active'));
+}
+
+function playClip(){
+  if(!currentMod||!playing) return;
+  const data=MODULES[currentMod];
+  if(clipIndex>=data.sentences.length){
+    stopAudio();return;
+  }
+  // 高亮当前句
+  document.querySelectorAll('.sentence').forEach(s=>s.classList.remove('active'));
+  const el=document.querySelector(`.sentence[data-idx="${clipIndex}"]`);
+  if(el){el.classList.add('active');el.scrollIntoView({block:'nearest',behavior:'smooth'});}
+
+  // 播放对应 mp3
+  const src=VOICE_DATA[`${currentMod}_${clipIndex}`];
+  audio=new Audio(src);
+  audio.onended=()=>{
+    clipIndex++;
+    // 句间短停顿（自然呼吸）
+    setTimeout(()=>{ if(playing) playClip(); },260);
+  };
+  audio.onerror=()=>{ clipIndex++; if(playing) playClip(); };
+  audio.play().catch(()=>{});
+}
+
+function toggleVoice(){
+  if(!currentMod) return;
+  if(playing){ stopAudio(); return; }
+  playing=true; clipIndex=0;
+  document.getElementById('voicePlayer').classList.add('playing');
+  document.getElementById('voiceBtn').textContent='⏸';
+  document.getElementById('voiceLabel').textContent='正在讲给您听…';
+  playClip();
+}
+
+// ============ 模块交互 ============
+document.querySelectorAll('.mod').forEach(mod=>{
+  mod.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    const key=mod.dataset.mod;
+    if(!key||!MODULES[key]) return;
+    document.getElementById('guideFloat').style.display='none';
+    document.querySelectorAll('.mod').forEach(m=>m.classList.remove('active'));
+    mod.classList.add('active');
+    currentMod=key;
+    const data=MODULES[key];
+    document.getElementById('sTitle').textContent=data.title;
+    document.getElementById('sEmotion').textContent=data.emotion;
+    document.getElementById('explainText').innerHTML=data.sentences.map((s,i)=>`<span class="sentence" data-idx="${i}">${s}</span>`).join('');
+    document.getElementById('valueBadges').innerHTML=data.values.map(v=>{const val=VALUES[v];return `<span class="v-badge ${val.cls}">${val.icon} ${val.label}</span>`;}).join('');
+    document.getElementById('sheetMask').classList.add('show');
+    document.getElementById('sheet').classList.add('show');
+    stopAudio();
+    setTimeout(()=>toggleVoice(),350);
+  });
+});
+
+function closeSheet(){
+  stopAudio();
+  document.getElementById('sheetMask').classList.remove('show');
+  document.getElementById('sheet').classList.remove('show');
+  document.querySelectorAll('.mod').forEach(m=>m.classList.remove('active'));
+}
+</script>
+<script>
+
+// ====== 多屏导航 ======
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on', s.dataset.screen===name));
+  document.querySelectorAll('.screen.on').forEach(s=>s.scrollTop=0);
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.tab===name));
+  const pb=document.getElementById('pvBar'), vk=PV_MAP[name];
+  if(pb){ if(vk&&VOICE_DATA[vk+'_0']){pb.style.display='flex';pb.dataset.voice=vk;} else pb.style.display='none'; }
+  pvStop();
+  if(vk&&VOICE_DATA[vk+'_0']) pvStart(vk);
+}
+function xtToast(msg){
+  const t=document.getElementById('xtToast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),1600);
+}
+function xtTab(el){ showScreen(el.dataset.tab); }
+// ====== 打开讲解浮层（复刻蓝本逻辑） ======
+function xtOpenMod(key){
+  if(!key||!MODULES[key]) return;
+  pvStop();
+    document.getElementById('guideFloat').style.display='none';
+    document.querySelectorAll('.mod').forEach(m=>m.classList.remove('active'));
+    
+    currentMod=key;
+    const data=MODULES[key];
+    document.getElementById('sTitle').textContent=data.title;
+    document.getElementById('sEmotion').textContent=data.emotion;
+    document.getElementById('explainText').innerHTML=data.sentences.map((s,i)=>`<span class="sentence" data-idx="${i}">${s}</span>`).join('');
+    document.getElementById('valueBadges').innerHTML=data.values.map(v=>{const val=VALUES[v];return `<span class="v-badge ${val.cls}">${val.icon} ${val.label}</span>`;}).join('');
+    document.getElementById('sheetMask').classList.add('show');
+    document.getElementById('sheet').classList.add('show');
+    stopAudio();
+    setTimeout(()=>toggleVoice(),350);
+}
+// ====== 首页宫格 → 真实页面导航（capture 拦截，讲解走数字徽标） ======
+const XT_NAV={'成长报告':'dailyReport','作业':'homework','积分':'points','缴费':'payment','社区':'community','评价':'evaluation','孩子':'students','公告':'announcement'};
+document.querySelectorAll('.p2-grid.mod .p2-tile').forEach(t=>{
+  const label=(t.textContent||'');
+  const key=Object.keys(XT_NAV).find(k=>label.includes(k));
+  if(key) t.setAttribute('data-nav', XT_NAV[key]);
+});
+document.querySelector('.invite-banner')?.setAttribute('data-nav','invite');
+document.addEventListener('click', e=>{
+  if(e.target.closest('.mod-hint')) return;   // 数字徽标 → 蓝本讲解
+  const nav=e.target.closest('[data-nav]');
+  if(nav){ e.stopPropagation(); e.preventDefault(); showScreen(nav.dataset.nav); }
+}, true);
+// ====== 报告族四页互跳 ======
+const XT_PN={'📋 日报':'dailyReport','📅 周报':'report','📊 月报':'monthly','🎓 学期':'semester'};
+document.querySelectorAll('.pn-item').forEach(el=>{
+  const t=(el.textContent||'').trim();
+  if(XT_PN[t]) el.addEventListener('click',()=>showScreen(XT_PN[t]));
+});
+// ====== letter / report / intro 语音组 ======
+Object.assign(VOICE_DATA, {
+  "letter_0": "assets/letter_0.mp3",  "letter_1": "assets/letter_1.mp3",  "letter_2": "assets/letter_2.mp3",  "letter_3": "assets/letter_3.mp3",  "letter_4": "assets/letter_4.mp3",  "letter_5": "assets/letter_5.mp3",  "letter_6": "assets/letter_6.mp3",
+  "report_0": "assets/report_0.mp3",  "report_1": "assets/report_1.mp3",  "report_2": "assets/report_2.mp3",  "report_3": "assets/report_3.mp3",
+  "intro_0": "assets/intro_0.mp3",  "intro_1": "assets/intro_1.mp3",  "intro_2": "assets/intro_2.mp3",  "intro_3": "assets/intro_3.mp3",
+  "face_0": "assets/face_0.mp3",  "face_1": "assets/face_1.mp3",
+  "weekly_0": "assets/weekly_0.mp3",  "weekly_1": "assets/weekly_1.mp3",
+  "monthly_0": "assets/monthly_0.mp3",  "monthly_1": "assets/monthly_1.mp3",
+  "semester_0": "assets/semester_0.mp3",  "semester_1": "assets/semester_1.mp3",
+  "homework_0": "assets/homework_0.mp3",  "homework_1": "assets/homework_1.mp3",
+  "points_0": "assets/points_0.mp3",  "points_1": "assets/points_1.mp3",
+  "payment_0": "assets/payment_0.mp3",  "payment_1": "assets/payment_1.mp3",
+  "community_0": "assets/community_0.mp3",  "community_1": "assets/community_1.mp3",
+  "students_0": "assets/students_0.mp3",  "students_1": "assets/students_1.mp3"
+});
+MODULES.letter={title:'给家长的一封信',emotion:'💌 · 我们的心里话',
+  sentences:['亲爱的家长：每年开学，都有家长问我们同一个问题——你们和别家有什么不一样？','我们的答案可能有点反常：我们的专业，首先体现在知道哪些事不该做。','我们不替您做家庭教育——孩子的习惯，绝大部分是在家里长出来的。','我们能负责的，是放学后那两三个小时：讲明白功课，改对错题，如实告诉您状态。','我们不靠印象，靠记录：人脸签到、作业错题、每天晚上八点的日报，都有据可查。','我们盯趋势，不盯一次分数——周报月报，让您看到这个月多了什么、少了什么。','您在手机上看到的每一条记录，都是当天真实发生的。欢迎随时来机构坐坐。'], values:['school','know','love']};
+MODULES.report={title:'成长报告，把一天摊开给您',emotion:'💛 看见 · 不猜测',
+  sentences:['打开成长报告，日报、周报、月报、学期，四个维度都在这一页。','今日到校几点、相册里今天有哪些照片，一眼看完。','老师的评语、今日作业和积分，都替您汇总好了。','您看到的每一条，都是当天真实发生的记录。'], values:['know','school']};
+MODULES.intro={title:'家长学堂，开场白',emotion:'🎬 · 我们的心里话',
+  sentences:['这里是家长学堂，我们用几分钟带您走遍小程序的每个功能。','先从给您的那封信开始听起吧。','每一个带数字的小点，都可以点开听讲解。','准备好了吗？我们现在开始。'], values:['school','love']};
+MODULES.face={title:'人脸签到，到校看得见',emotion:'💛 安心 · 实时',sentences:['打开人脸签到管理，孩子注册过人脸后，刷脸就能自动签到。','谁几点到校一目了然，再也不用追着老师问孩子到没到。'],values:['school','love']};
+MODULES.weekly={title:'一周节奏，两分钟读完',emotion:'💛 节奏 · 不打扰',sentences:['一周一条周报，把这五天的作业、表现和进步讲给您听。','不用每天追问，周末花两分钟，就能看清孩子的节奏。'],values:['school','love']};
+MODULES.monthly={title:'月月对照，成长有账',emotion:'💛 对照 · 看得见',sentences:['月报把这个月的收获和起伏汇成一页。','比上个月多了什么、少了什么，一眼看得明明白白。'],values:['school','love']};
+MODULES.semester={title:'一学期的轨迹归档',emotion:'💛 累积 · 珍藏',sentences:['一个学期的点点滴滴，都归档在这份成长档案里。','学期末回看，孩子的每一步都清清楚楚。'],values:['school','love']};
+MODULES.homework={title:'作业流水线，一路可追',emotion:'💛 省心 · 不催',sentences:['作业从布置、上传到批改，三个状态一路可追踪。','拍张照就能提交，老师的批改和评语马上送达。'],values:['school','love']};
+MODULES.points={title:'挣积分，换开心',emotion:'💛 鼓励 · 同口径',sentences:['上课积极、作业优秀都能攒积分，分是孩子一分一分挣来的。','积分能换文具和礼品，让校内外的鼓励同一个口径。'],values:['school','love']};
+MODULES.payment={title:'账单明白，信任踏实',emotion:'💛 明白 · 放心',sentences:['账单明细列得清清楚楚，在线缴费一步完成。','钱的事明白，家校之间的信任才踏实。'],values:['school','love']};
+MODULES.community={title:'机构日常，眼前直播',emotion:'💛 参与 · 不缺席',sentences:['机构活动、班级日常、今日餐食，都在社区里直播。','老师上传的影像和动态，让您不错过孩子的每个瞬间。'],values:['school','love']};
+MODULES.students={title:'档案您做主',emotion:'💛 知情 · 掌控',sentences:['孩子的姓名、班级、绑定关系，都在这里管理。','信息您做主，知情才安心。'],values:['school','love']};
+// ====== 页面内嵌语音：仅在放置的页面 · 边看边播 · ▶/⏸ 自由控制 · 翻页即停 ======
+const PV_MAP={home:'functions',face:'face',checkin:'checkin',dailyReport:'report',report:'weekly',monthly:'monthly',semester:'semester',homework:'homework',evaluation:'eval',points:'points',payment:'payment',announcement:'notice',community:'community',invite:'invite',students:'students'};
+const PV_TITLE={functions:'功能总览',face:'人脸签到管理',checkin:'孩子签到',report:'成长报告',weekly:'成长周报',monthly:'成长月报',semester:'学期成长档案',homework:'作业管理',eval:'评价查看',points:'我的积分',payment:'在线缴费',notice:'公告与确认',community:'社区',invite:'推荐有礼',students:'学生信息'};
+let pvAudio=null,pvKey=null,pvIdx=0,pvOn=false;
+function pvPaint(){
+  const b=document.getElementById('pvBar'); if(!b) return;
+  b.classList.toggle('playing', pvOn);
+  const st=b.querySelector('.pv-state'); if(st) st.textContent=pvOn?'⏸':'▶';
+  const t=b.querySelector('.pv-txt');
+  if(t&&pvKey){
+    const m=MODULES[pvKey];
+    t.textContent=(pvOn&&m)?((pvIdx+1)+'/'+m.sentences.length+' · '+(PV_TITLE[pvKey]||'讲解')):(PV_TITLE[pvKey]||'听讲解');
+  }
+}
+function pvStop(){
+  if(pvAudio){try{pvAudio.pause();}catch(e){} pvAudio=null;}
+  pvOn=false; pvKey=null; pvPaint();
+}
+function pvNext(){
+  if(!pvOn||!pvKey) return;
+  const d=VOICE_DATA[pvKey+'_'+pvIdx], m=MODULES[pvKey];
+  if(!d||!m||pvIdx>=m.sentences.length){ pvStop(); return; }
+  const a=new Audio(d); pvAudio=a;
+  a.onended=()=>{ pvIdx++; pvNext(); };
+  a.onerror=()=>{ pvStop(); };
+  a.play().catch(()=>{ pvStop(); });
+  pvPaint();
+}
+function pvStart(key){
+  if(!key||!MODULES[key]||!VOICE_DATA[key+'_0']) return;
+  pvStop();
+  pvKey=key; pvIdx=0; pvOn=true;
+  pvPaint(); pvNext();
+}
+function pvToggle(key){
+  if(pvOn&&pvKey===key) pvStop();
+  else pvStart(key);
+}
+
+</script>
+</body>
+</html>
